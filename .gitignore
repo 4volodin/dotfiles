@@ -1,0 +1,27 @@
+# Compiled Python files
+*.pyc
+
+.idea
+
+# Folder view configuration files
+.DS_Store
+Desktop.ini
+
+# Thumbnail cache files
+._*
+Thumbs.db
+
+# Files that might appear on external disks
+.Spotlight-V100
+.Trashes
+
+.config/nvim/plugged
+.config/nvim/autoload/plug.vim
+
+# Temporary
+.netrwhist
+*~
+# Auto-generated tag files
+tags
+
+*.log

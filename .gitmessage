@@ -1,0 +1,17 @@
+########50 characters############################
+# [JIR-1986] type: Subject
+# type: feat/fix /refactor/perf/style/test/docs/chore build/ci
+# If applied, this commit WILL ... subject
+Subject
+
+########72 characters##################################################
+# Problem, Task, Reason for Commit
+# What, Why... ?
+Problem
+
+# Solution or List of Changes
+Solution
+
+# Special instructions, testing steps, rake, etc
+Note
+

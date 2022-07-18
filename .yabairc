@@ -1,0 +1,73 @@
+#!/usr/bin/env sh
+
+# the scripting-addition must be loaded manually if
+# you are running yabai on macOS Big Sur. Uncomment
+# the following line to have the injection performed
+# when the config is executed during startup.
+#
+# for this to work you must configure sudo such that
+# it will be able to run the command without password
+#sudo yabai --load-sa
+#yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
+
+yabai -m config window_placement                second_child
+yabai -m config window_topmost                  off
+yabai -m config window_shadow                   off
+yabai -m config window_border                   on
+yabai -m config window_border_width             6
+yabai -m config window_border_radius            1
+
+#yabai -m config window_opacity                  on
+#yabai -m config active_window_opacity        0.95
+#yabai -m config normal_window_opacity        0.90
+
+#yabai -m config active_window_border_color   0xff5ae3ee # 0xff+HEX-COLOR
+yabai -m config active_window_border_color   0xffF04A25
+yabai -m config normal_window_border_color   0xff505050
+yabai -m config insert_feedback_color        0xffd75f5f
+
+yabai -m config split_ratio                     0.5
+yabai -m config auto_balance                    off
+yabai -m config mouse_modifier                  fn
+yabai -m config mouse_action1                   move
+yabai -m config mouse_action2                   resize
+
+# general space settings
+yabai -m config layout                          bsp
+yabai -m config top_padding                     2
+yabai -m config bottom_padding                  2
+yabai -m config left_padding                    2
+yabai -m config right_padding                   2
+yabai -m config window_gap                      3
+
+## Space labels
+yabai -m space 1 --label "1-Dashboard"
+yabai -m space 2 --label "2-Dev"
+yabai -m space 3 --label "3-Web"
+yabai -m space 4 --label "4"
+yabai -m space 5 --label "5-Media" layout=float
+
+# window rules
+#yabai -m rule --add app="^.*$" manage=off
+yabai -m rule --add app!="iTerm2|Code|Safari|Chrome|PhpStorm" manage=off #grid=6:6:1:1:4:5
+
+yabai -m rule --add app="^Code$" space=2-Dev
+#yabai -m rule --add app="^Safari$" manage=on
+#yabai -m rule --add app="^.*Chrome.*$" manage=on
+#yabai -m rule --add app='^iTerm2$' manage=on
+#yabai -m rule --add app='^.*PhpStorm.*$' manage=on
+
+yabai -m rule --add title='^.*Pref.*$' manage=off
+
+yabai -m rule --add app="^Notes$" space=5-Media manage=off #grid=1:1:0:0:1:1
+yabai -m rule --add app="^FirstSeed Calendar$" space=5-Media manage=off #grid=1:1:0:0:1:1
+yabai -m rule --add app="^Toggl Track$" space=5-Media manage=off #grid=1:1:0:0:1:1
+yabai -m rule --add app="^TeamViewer$" space=5-Media manage=off
+yabai -m rule --add app="^(Mail|Music|Anki)$" space=5-Media manage=off
+yabai -m rule --add app="^(Telegram|Slack|Messages)$" space=5-Media
+yabai -m rule --add app="^FaceTime$" space=5-Media manage=off
+
+#yabai -m rule --add title='^.*Preferences.*$' manage=off
+#yabai -m rule --add title='^.*Extensions.*$' manage=off
+#yabai -m rule --add app="^System Preferences$" manage=off
+

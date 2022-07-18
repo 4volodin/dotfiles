@@ -1,0 +1,44 @@
+* text=auto
+# обнаруживать все текстовые файлы и автоматически конвертировать в них CRLF в LF. Строка * text=auto  будет обрабатывать все файлы, которых нет в списке ниже. этот параметр, не забудьте, что он должен быть указан на первой строке файла .gitattributes, чтобы последующие строки могли его переопределить. установит для всех, подходящих под условие файлов, замену CRLF на LF, если Гит с помощью своего эвристического метода определит эти файлы как текстовые а не бинарные Если файл не определён, Гит вернётся к старой системе и настройке core.autocrlf
+
+
+# Documents
+*.doc     diff=astextplain
+*.DOC     diff=astextplain
+*.docx diff=astextplain
+*.DOCX diff=astextplain
+*.dot  diff=astextplain
+*.DOT  diff=astextplain
+*.pdf  diff=astextplain
+*.PDF     diff=astextplain
+*.rtf     diff=astextplain
+*.RTF     diff=astextplain
+*.md text
+*.tex text
+*.adoc text
+*.textile text
+*.mustache text
+*.csv text
+*.tab text
+*.tsv text
+*.sql text
+
+# Graphics
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.tif binary
+*.tiff binary
+*.ico binary
+# SVG по дефолту рассматривается как бинарный. Если вы хотите, чтобы он распознавался как текст, закомментируйте  следующую строку и раскомментируйте следующую за ней.
+*.svg binary
+#*.svg text
+*.eps binary
+
+#
+# Исключить файлы из экспорта
+#
+
+.gitattributes export-ignore
+.gitignore export-ignore

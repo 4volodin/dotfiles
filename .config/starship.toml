@@ -1,0 +1,82 @@
+# Replace the "❯" symbol in the prompt with "❯❯"
+add_newline = true
+format = "$all$git_branch$git_status$character"
+
+[character]
+success_symbol = "[❯](bold green) "
+error_symbol = "[✗](bold red) "
+
+# Disable the package module, hiding it from the prompt completely
+[package]
+disabled = true
+
+# Disable the AWS module.
+[aws]
+disabled = true
+format = '\[AWS: [$profile/($region)]($style)\]'
+symbol = ''
+style = 'bold white'
+
+[custom.tztime]
+#command = 'date +"%a %b %d %Y %l:%M%p (%Z%z)"'
+command = 'date +"%l:%M%p"'
+when = "true"
+format = '[\[$symbol($output)\]](bold black)'
+
+# Set the time format
+[time]
+format = "[at](bold black) [$time ](bold black)"
+disabled = true
+use_12hr = true
+#time_format = "%Y-%m-%d %H:%M:%S"
+time_format = "%r"
+utc_time_offset = "+4"
+
+# Directory setttings
+[directory]
+format = "[$path]($style)[$read_only]($read_only_style) "
+truncation_length = 3
+truncate_to_repo = false
+truncation_symbol = "…/"
+
+[username]
+#disabled = true
+style_user = "bold green"
+style_root = "black"
+format = "[$user]($style)[@](white)"
+disabled = false
+show_always = true
+
+[hostname]
+ssh_only = false
+format =  "[$hostname](bold green) ❯ "
+
+# Workaround for slow prompt with git status
+[git_branch]
+style = "bold yellow"
+
+[git_status]
+ahead = "[](purple)[$count](white)"
+behind = "[](cyan)[$count](white)"
+conflicted = '[=$count](yellow)'
+deleted = '[✘$count](black)'
+diverged = "[](cyan)[$ahead_count](white)[](purple)[$behind_count](white)"
+modified = '[*$count](red)'
+renamed = "[»$count](purple)"
+staged = "[+$count](green)"
+stashed = "[\\$$count](yellow)"
+style = "bold bright-white"
+untracked = "[?$count](cyan)"
+
+[git_commit]
+style = "bold black"
+format = "[$hash]($style) [$tag]($style)"
+
+[ruby]
+symbol = " "
+
+[nodejs]
+symbol = " "
+
+[python]
+symbol = " "
