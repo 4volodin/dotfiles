@@ -24,7 +24,7 @@ Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
 
 Plug 'ntpeters/vim-better-whitespace'               " Trailing whitespace highlighting & automatic fixing
 
-Plug 'wakatime/vim-wakatime'
+"Plug 'wakatime/vim-wakatime'
 Plug 'rizzatti/dash.vim'
 "Plug 'tpope/vim-sensible'
 "

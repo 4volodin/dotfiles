@@ -1,4 +1,4 @@
-"{{{ #Coc
+
 
 " === Coc.nvim === "
 "  CocInstall coc-pairs coc-emmet coc-json coc-eslint coc-prettier coc-html
@@ -75,7 +75,7 @@ nnoremap <silent> K :call <SID>show_documentation()<CR>
 ""--------------------}
 
 " Highlight symbol under cursor on CursorHold
-autocmd CursorHold * silent call CocActionAsync('highlight')
+"autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Remap for rename current word
 nmap <leader>rn <Plug>(coc-rename)
