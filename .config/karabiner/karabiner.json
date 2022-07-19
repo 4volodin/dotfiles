@@ -34,7 +34,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "f11"
+                                        "key_code": "mission_control"
                                     }
                                 ],
                                 "type": "basic"
@@ -98,7 +98,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "mission_control"
+                                        "key_code": "f11"
                                     }
                                 ],
                                 "type": "basic"
