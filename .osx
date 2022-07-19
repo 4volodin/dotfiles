@@ -2,20 +2,13 @@
 # ~/.macos — https://mths.be/macos
 
 # Ask for the administrator password upfront
-#sudo -v
+sudo -v
 
-# Warn that some commands will not be run if the script is not run as root.
-if [[ $EUID -ne 0 ]]; then
-  RUN_AS_ROOT=false
-  printf "Certain commands will not be run without sudo privileges. To run as root, run the same command prepended with 'sudo', for example: $ sudo $0\n\n" | fold -s -w 80
-else
-  RUN_AS_ROOT=true
-  # Update existing `sudo` timestamp until `.osx` has finished
-  while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
-fi
+# Update existing `sudo` timestamp until `.osx` has finished
+while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 # Keeping Mac awake for one hour
-caffeinate -d 3600 &
+#caffeinate -d 3600 &
 
 # ClosAppleMultitouchTrackpade any open System Preferences panes, to prevent them from overriding
 # settings we’re about to change
@@ -29,24 +22,20 @@ osascript -e 'tell application "System Preferences" to quit'
 ###############################################################################
 
 
-if [[ "$RUN_AS_ROOT" = true ]]; then
-    # Set computer name (as done via System Preferences → Sharing)
-    # This is the user-friendly computer name you see in Finder
-    sudo scutil --set ComputerName "TrueDev-M1"
-    # the name when connecting via SSH and the name shown on your Terminal
-    sudo scutil --set HostName "TrueDev-M1"
-    #  the name usable on the local network, for Bounjour services
-    sudo scutil --set LocalHostName "truedev-m1"
-    sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "TrueDev-M1"
+# Set computer name (as done via System Preferences → Sharing)
+# This is the user-friendly computer name you see in Finder
+sudo scutil --set ComputerName "TrueDev-M1"
+# the name when connecting via SSH and the name shown on your Terminal
+sudo scutil --set HostName "TrueDev-M1"
+#  the name usable on the local network, for Bounjour services
+sudo scutil --set LocalHostName "truedev-m1"
+sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "TrueDev-M1"
 
-    # Enable Firewall
-    sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
-    # Disable the sound effects on boot
-    sudo nvram SystemAudioVolume=" "
-    ## Set the timezone; see `sudo systemsetup -listtimezones` for other values
-    sudo systemsetup -settimezone "Europe/Samara" > /dev/null
+sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.locate.plist
 
-fi
+# Enable Firewall
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
+
 
 # enable Locate
 #sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.locate.plist
@@ -382,12 +371,6 @@ defaults write com.apple.finder FXPreferredViewStyle -string "clmv"
 ## Enable AirDrop over Ethernet and on unsupported Macs running Lion
 defaults write com.apple.NetworkBrowser BrowseAllInterfaces -bool true
 
-## Show the ~/Library folder
-chflags nohidden ~/Library && xattr -d com.apple.FinderInfo ~/Library
-
-## Show the /Volumes folder
-#sudo chflags nohidden /Volumes
-
 ## Remove Dropbox’s green checkmark icons in Finder
 #file=/Applications/Dropbox.app/Contents/Resources/emblem-dropbox-uptodate.icns
 #[ -e "${file}" ] && mv -f "${file}" "${file}.bak"
@@ -501,8 +484,8 @@ defaults write com.apple.dock wvous-tr-modifier -int 0
 ## Bottom left screen corner → Start screen saver
 defaults write com.apple.dock wvous-bl-corner -int 11
 defaults write com.apple.dock wvous-bl-modifier -int 0
-## Bottom right screen cornet - Desktop
-defaults write com.apple.dock wvous-br-corner -int 4
+## Bottom right screen cornet - Quick Note
+defaults write com.apple.dock wvous-br-corner -int 14
 defaults write com.apple.dock wvous-br-modifier -int 0
 
 
@@ -623,19 +606,15 @@ defaults write com.apple.mail SpellCheckingBehavior -string "NoSpellCheckingEnab
 ################################################################################
 ## Spotlight                                                                   #
 ################################################################################
-if [[ "$RUN_AS_ROOT" = true ]]; then
-  # Disable Spotlight indexing for any volume that gets mounted and has not yet
-  # been indexed before.
-  # Use `sudo mdutil -i off "/Volumes/foo"` to stop indexing any volume.
-  sudo defaults write /.Spotlight-V100/VolumeConfiguration Exclusions -array "/Volumes"
+# Disable Spotlight indexing for any volume that gets mounted and has not yet
+# been indexed before.
+# Use `sudo mdutil -i off "/Volumes/foo"` to stop indexing any volume.
 
-  # Restart spotlight
-  killall mds > /dev/null 2>&1
+# Restart spotlight
+#killall mds > /dev/null 2>&1
 
-  sudo plutil -insert Exclusions.0 -string '/Volumes/Media (s1 Tosh 362Gb)' /System/Volumes/Data/.Spotlight-V100/VolumeConfiguration.plist
-  sudo launchctl stop com.apple.metadata.mds && sudo launchctl start com.apple.metadata.mds
+sudo launchctl stop com.apple.metadata.mds && sudo launchctl start com.apple.metadata.mds
 
-fi
 
 ## Hide Spotlight tray-icon (and subsequent helper)
 ##sudo chmod 600 /System/Library/CoreServices/Search.bundle/Contents/MacOS/Search
@@ -735,9 +714,6 @@ defaults write com.apple.terminal StringEncodings -array 4
 ## Prevent Time Machine from prompting to use new hard drives as backup volume
 #– отключение запрос Time Machine при подключении диска
 defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
-
-## Disable local Time Machine backups
-hash tmutil &> /dev/null && sudo tmutil disablelocal
 
 ################################################################################
 ## Activity Monitor                                                            #
@@ -904,13 +880,14 @@ defaults write com.apple.Dock autohide-delay -float 0.0001
 #defaults delete com.apple.Dock autohide-delay; killall Dock
 
 ## hide menu bar
-defaults write NSGlobalDomain _HIHideMenuBar -bool true
+#defaults write NSGlobalDomain _HIHideMenuBar -bool true
 ## show menu bar
 #defaults write NSGlobalDomain _HIHideMenuBar -bool false
 
 
 ### ADD a spacer
-#defaults write com.apple.dock persistent-apps -array-add '{"tile-type"="spacer-tile";}'
+defaults write com.apple.dock persistent-apps -array-add '{"tile-type"="spacer-tile";}'
+defaults write com.apple.dock persistent-apps -array-add '{"tile-type"="spacer-tile";}'
 ###show only active apps
 #defaults write com.apple.dock static-only -bool true
 
@@ -974,12 +951,9 @@ for app in "Activity Monitor" \
     killall "${app}" > /dev/null 2>&1
 done
 
-if [[ "$RUN_AS_ROOT" = true ]]; then
-    # Disable ipv6
-    networksetup -setv6off Wi-Fi
-fi
+# Disable ipv6
+networksetup -setv6off Wi-Fi
 
-# Disable brew analytics
 brew analytics off
 
 echo "Done. Note that some of these changes require a logout/restart to take effect."
