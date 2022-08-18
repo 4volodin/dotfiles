@@ -23,7 +23,10 @@ alias -g G='| grep -i'  # for use ls -l G do
 alias cdls="cd && ls"
 alias frm="fzf | xargs rm -v"
 alias rep=project_wide_replace
+
 alias tmuxattach='tmux attach -t $(tmux ls | fzf)'
+alias tkill="for s in \$(tmux list-sessions | awk '{print \$1}' | rg ':' -r '' | fzf); do tmux kill-session -t \$s; done;"
+
 
 alias ff='fzf --print0 -e | xargs -0 -r code'
 alias ft="rg --vimgrep --color ansi --no-heading  --ignore-case --no-ignore --hidden --follow -g '!{.git,.idea,node_modules,vendor,tags}/*' --line-number \"$1\"  | \
@@ -91,9 +94,10 @@ alias chrome='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --r
 alias excel='open -a /Applications/Microsoft\ Excel.app/Contents/MacOS/Microsoft\ Excel'
 
 alias soundreload='sudo killall coreaudiod'
-alias zshconf='nvim $HOME/.zshrc'
-alias torconf='nvim /usr/local/etc/tor/torrc'
+alias zconf='nvim $HOME/.zshrc'
+alias torconf='nvim /opt/homebrew/etc/tor/torrc'
 alias flushdns="sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder && echo macOS DNS Cache Reset"
+alias dnsreload="sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder && echo macOS DNS Cache Reset"
 alias bindreload='sudo named-checkconf /usr/local/etc/bind/named.conf && sudo brew services restart bind && flushdns'
 alias dnsmasqreload="dnsmasq --test && sudo brew services restart dnsmasq && flushdns"
 alias torreload='brew services restart tor'
@@ -126,7 +130,7 @@ alias mongorun='brew services run mongodb-community' # start - will start mongod
 alias mongostatus='brew services list'
 alias mongostop='brew services stop mongodb-community'
 
-alias brewclean='brew cleanup -s'
+alias brewclean='brew cleanup -s && rm -rf `brew --cache`'
 alias brewupgrade='brew update; brew upgrade; brew cleanup -s; brew doctor; brew missing'
 
 alias setproxy='export http_proxy=socks5://127.0.0.1:9050'  # 'curl ifconfig.me' if it shows your proxy IP and it means that your are success
@@ -150,6 +154,12 @@ alias got='git '
 alias get='git '
 # Delete all remote tracking Git branches where the upstream branch has been deleted
 alias gitprune="git fetch --prune && git branch -vv | grep 'origin/.*: gone]' | awk '{print \$1}' | xargs git branch -d"
+
+#will automatically fix tracking for my branch.
+alias trackme='git branch --set-upstream-to=origin/$(git symbolic-ref --short HEAD)'
+
+# I sometimes get a bit lazy at checking main for changes before submitting any prs, so again I made a quick shell alias that will rebase main into my branch before I open a pr.
+alias rebasemain='git pull origin main --rebase'
 
 # URL-encode strings
 alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'

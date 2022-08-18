@@ -6,9 +6,9 @@ export ANSIBLE_NOCOWS="1" # disable Cow in Ansible output
 export PYTHONUNBUFFERED=1
 export NVIM_TUI_ENABLE_TRUE_COLOR=1 # Enabled true color support for terminals
 
-export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH+:$PATH}";
+export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/MacGPG2/bin:$PATH
+export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH+:$PATH}";
 
 #export PATH=/usr/local/opt/python/libexec/bin:$PATH PATHS
 #export PATH="/usr/local/opt/python@2/libexec/bin:$PATH"
@@ -18,14 +18,10 @@ export PATH=/usr/local/MacGPG2/bin:$PATH
 
 VISUAL=nvim; export VISUAL EDITOR=nvim;  export EDITOR
 
-# Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
-# Uncomment the following line to change how often to auto-update (in days).
-export UPDATE_ZSH_DAYS=13
-# Uncomment the following line to enable command auto-correction.
-ENABLE_CORRECTION="true"
-# Uncomment the following line to display red dots whilst waiting for completion.
-COMPLETION_WAITING_DOTS="true"
+# DISABLE_AUTO_UPDATE="true"   # Uncomment the following line to disable bi-weekly auto-update checks.
+export UPDATE_ZSH_DAYS=13      # Uncomment the following line to change how often to auto-update (in days).
+ENABLE_CORRECTION="true"       # Uncomment the following line to enable command auto-correction.
+COMPLETION_WAITING_DOTS="true" # Uncomment the following line to display red dots whilst waiting for completion.
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
 # much, much faster.
@@ -50,6 +46,7 @@ export HISTCONTROL=ignoredups;
 # ====================================================================
 # FZF
 # ====================================================================
+#bindkey '^r' fzf-history-widget
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob=\!{.git,.idea,node_modules,vendor,tags} --glob="*.{js,json,php,md,styl,jade,html,config,py,cpp,c,go,hs,rb,conf}" 2> /dev/null'
 #export FZF_DEFAULT_COMMAND='fd  --type f --follow --hidden --color=always --exclude .git'
 #export FZF_DEFAULT_COMMAND='fd -H -t f . $HOME'
@@ -70,11 +67,7 @@ export FZF_DEFAULT_OPTS="
     --bind \"ctrl-y:execute-silent(ruby -e 'puts ARGV' {+} | pbcopy)+abort\" \
     --bind 'alt-e:execute($EDITOR {} >/dev/tty </dev/tty)' \
     --preview-window right:60% \
-    --bind ctrl-k:preview-up,ctrl-j:preview-down \
-    --color=fg:#d0d0d0,bg:#25262e,hl:#d7005f \
-    --color=fg+:#d0d0d0,bg+:#25262e,hl+:#5fd7ff \
-    --color=info:#afaf87,prompt:#d7005f,pointer:#7edbca \
-    --color=marker:#ffa7c4,spinner:#ffa7c4
+    --bind ctrl-k:preview-up,ctrl-j:preview-down
 "
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS="--preview 'bat --color=always --line-range :50 {}'"
@@ -93,8 +86,10 @@ export FZF_CTRL_R_OPTS="
     "
 
 export VIM_FZF_LOG=$(git config --get alias.l 2>/dev/null | awk '{$1=""; print $0;}' | tr -d '\r')
-# ============================ FZF ===============================
+#  FZF ===============================
 
+# BEGIN ANSIBLE MANAGED BLOCK
 export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+# END ANSIBLE MANAGED BLOCK

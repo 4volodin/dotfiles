@@ -1,4 +1,5 @@
 
+
 colorls() {
   for i in {0..255}; do print -Pn "%K{$i}  %k%F{$i}${(l:3::0:)i}%f " ${${(M)$((i%6)):#3}:+$'\n'}; done
 }
@@ -26,6 +27,29 @@ awk -v term_cols="${width:-$(tput cols || echo 80)}" 'BEGIN{
 fdiff() {
   preview="git diff $@ --color=always -- {-1}"
   git diff $@ --name-only | fzf -m --ansi --preview $preview
+}
+# git log browser with FZF
+fglog() {
+  git log --graph --color=always \
+      --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
+  fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
+      --bind "ctrl-m:execute:
+                (grep -o '[a-f0-9]\{7\}' | head -1 |
+                xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
+                {}
+FZF-EOF"
+}
+
+
+
+_fzf_comprun() {
+  local command=$1
+  shift
+
+  case "$command" in
+    cd)           fzf "$@" --preview 'tree -C {} | head -200' ;;
+    *)            fzf "$@" ;;
+  esac
 }
 
 # Распаковка архивов
@@ -73,7 +97,28 @@ pk () {
 # `tm` will allow you to select your tmux session via fzf.
 # `tm irc` will attach to the irc session (if it exists), else it will create it.
 
-tm () {
+# ftmux - help you choose tmux sessions
+tm() {
+    if [[ ! -n $TMUX ]]; then
+        # get the IDs
+        ID="`tmux list-sessions`"
+        if [[ -z "$ID" ]]; then
+            tmux new-session
+        fi
+        create_new_session="Create New Session"
+        ID="$ID\n${create_new_session}:"
+        ID="`echo $ID | fzf | cut -d: -f1`"
+        if [[ "$ID" = "${create_new_session}" ]]; then
+            tmux new-session
+        elif [[ -n "$ID" ]]; then
+            printf '\033]777;tabbedx;set_tab_name;%s\007' "$ID"
+            tmux attach-session -t "$ID"
+        else
+            :  # Start terminal normally
+        fi
+    fi
+}
+ftmux () {
   [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
   if [ $1 ]; then
     tmux $change -t "$1" 2>/dev/null || (tmux new-session -d -s $1 && tmux $change -t "$1"); return
@@ -81,7 +126,7 @@ tm () {
   session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf --exit-0) &&  tmux $change -t "$session" || echo "No sessions found."
 }
 
-tmu () {
+tmuxx () {
   TARGET_DIR=$(pwd)
   TARGET_NAME=$(basename "$TARGET_DIR")
   LISTSESSIONS=$(tmux list-sessions)
@@ -240,9 +285,3 @@ function dumpdbgz() {
 
 #}}}
 
-# {{{------------
-function teplota73 {
-    cd /Users/voale/code/sites/truedev.su/teplota73.truedev.su && bash teplota73 $*
-        cd -
-}
-# }}}

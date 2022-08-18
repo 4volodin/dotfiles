@@ -31,7 +31,7 @@ colorscheme github_light
 lua << EOF
 require('lualine').setup {
   options = {
-    theme = 'github', -- or "auto"
+    theme = 'github_light', -- or "auto"
     -- ... your lualine config
   }
 }

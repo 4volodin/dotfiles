@@ -1,64 +1,33 @@
-[ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# define plugins before initialize oh-my-zsh
+plugins=(
+  git
+  docker
+  autoupdate
+  colored-man-pages
+  fzf-tab
+  zsh-completions
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+)
 source $HOME/.zsh-env.zsh
 source $HOME/.zsh-aliases.zsh
 source $HOME/.zsh-common-functions.zsh
 source $HOME/.zsh-functions.zsh
 source $HOME/.zsh-gpg.zsh
 source $HOME/.oh-my-zsh/oh-my-zsh.sh
+source $HOME/.asdf/asdf.sh
+source $HOME/.asdf/completions/asdf.bash
 
-if [[ -n "$TMUX" ]]; then
-    if [[ -z $(tmux show-environment | grep THEME) ]]; then
-        osascript -e 'tell app "System Events" to keystroke "w" using {shift down, option down, control down}'
-        tmux set-environment THEME light
-        tmux source-file ~/.tmux/themes/github_light.tmux
-    else
-        if [[  $(tmux show-environment | grep THEME) =~ 'THEME=light' ]]; then
-            osascript -e 'tell app "System Events" to keystroke "w" using {shift down, option down, control down}'
-            tmux source-file ~/.tmux/themes/github_light.tmux
-            tmux set-environment THEME light
-        else
-            osascript -e 'tell app "System Events" to keystroke "s" using {shift down, option down, control down}'
-            tmux source-file ~/.tmux/themes/github_dark.tmux
-            tmux set-environment THEME dark
-        fi
-    fi
-fi
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh               #  To accept useful key bindings and fuzzy completion
 
-bindkey '^r' fzf-history-widget
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
-#source ~/.zsh/plugins/zsh-completions/zsh-completions.plugin.zsh
-#source ~/.zsh/plugins/completion.zsh
-#source ~/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-#source ~/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-plugins=(
-  #wd
-  git
-  docker
-  pass
-  colored-man-pages
-  # https://www.viget.com/articles/zsh-config-productivity-plugins-for-mac-oss-default-shell/
-  zsh-completions # autoload compinit  Completions for the commands available within apps, with descriptions. Trigger it with TAB⇥
-  zsh-autosuggestions # This plugin will suggest previously run commands as you type. Accept the suggestion by pressing the right arrow key.
-  zsh-syntax-highlighting # Colors commands as you type them, making errors easy to spot.
-)
-#Fix errors
-#ZSH_DISABLE_COMPFIX="true"
-
-# https://blog.debiania.in.ua/posts/2009-11-21-zsh-taking-the-second-step.html
-# set autoload path
-fpath=(~/.zsh/zsh "${fpath[@]}")
 # every time we load .zshrc, ditch duplicate path entries
 typeset -U PATH fpath
 
 # https://gist.github.com/raftheunis87/607682946d0ef041ce1ad28c37456b7d
 # activate completion system first if you are not using something like oh-my-zsh
 # enable autocompletion for plugin zsh-completions using $fpath
-autoload -Uz compinit
+autoload -U compinit && compinit
 # Cache completion if nothing changed - faster startup time
 typeset -i updated_at=$(date +'%j' -r ~/.zcompdump 2>/dev/null || stat -f '%Sm' -t '%j' ~/.zcompdump 2>/dev/null)
 if [ $(date +'%j') != $updated_at ]; then
@@ -66,8 +35,9 @@ if [ $(date +'%j') != $updated_at ]; then
 else
   compinit -C -i
 fi
+
 # Enhanced form of menu completion called `menu selection'
-zmodload -i zsh/complist
+#zmodload -i zsh/complist
 
 # Options
 # https://www.viget.com/articles/zsh-config-productivity-plugins-for-mac-oss-default-shell/
@@ -88,7 +58,12 @@ setopt NOTIFY #Сообщать при изменении статуса фон�
 
 unsetopt correct_all # disable autocorrent commands
 
+eval "$(zoxide init zsh)"
+
 # Now this command will run each time you start a new shell instance. It creates a series of environment variables, including HOMEBREW_CELLAR="/opt/homebrew/Cellar" and HOMEBREW_REPOSITORY="/opt/homebrew" and several others.
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 eval "$(starship init zsh)"
+
+#bindkey '\t' menu-complete
+

@@ -11,7 +11,7 @@
 # + sort
 # + movement
 # + fzf got to folder
-# - fzf  ripgrep
+# + fzf  ripgrep
 # + bulkrename
 # + rename
 # + yank path basename
@@ -46,6 +46,7 @@ set timefmt '2006-01-02 15:04:05 -0700'
 
 # Bindings
 # Remove some defaults
+map t
 map m
 map o
 map n
@@ -372,20 +373,35 @@ cmd fzf_jump ${{
   fi
   lf -remote "send $id $cmd \"$res\""
 }}
-
-cmd rg ${{
-    res = "$(rg --color=never --no-heading  --ignore-case --no-ignore --hidden --follow --glob=\!{.git,.idea,node_modules,vendor,tags} --line-number '' . | fzf --no-multi --delimiter=: --preview 'bat --color=always --line-range {2}: {1}
-' )"
-    cmd="select"
-  lf -remote "send $id $cmd \"$res\""
-}}
 map <c-f> :fzf_jump
-map <c-g> :rg
 
-# Quickly locate a file with fzf and select it in lf
-map gf $lf -remote "send $id select $(fzf)"
-#map ff fzf_jump
+cmd fzf_search ${{
+    res="$( \
+        RG_PREFIX="rg --column --line-number --no-heading --color=always \
+            --no-ignore --hidden --follow \
+             --glob=\!{.git,.idea,node_modules,vendor,tags} \
+            --ignore-case  "
+        FZF_DEFAULT_COMMAND="$RG_PREFIX ''" \
+            fzf --bind "change:reload:$RG_PREFIX {q} || true" \
+            --no-multi \
+            --delimiter=: \
+            --preview 'bat --color=always --line-range {2}: {1}' \
+            --ansi --layout=reverse --header 'Search in files' \
+            | cut -d':' -f1
+    )"
+    [ ! -z "$res" ] && lf -remote "send $id select \"$res\""
+}}
+map <c-g> :fzf_search
 
+cmd z %{{
+    result="$(zoxide query --exclude "${PWD}" -- "$1")"
+    lf -remote "send ${id} cd '${result}'"
+}}
+
+cmd zi ${{
+    result="$(zoxide query -i -- "$1""
+    lf -remote "send ${id} cd '${result}'"
+}}
 # }}} >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  FZF >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 

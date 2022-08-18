@@ -61,10 +61,8 @@ Plug 'junegunn/fzf.vim'
 Plug 'haya14busa/incsearch.vim'
 "Plug 'Shougo/denite.nvim'                                      " Denite - Fuzzy finding, buffer management
 
-
 Plug 'honza/vim-snippets'
 Plug 'editorconfig/editorconfig-vim'
-
 
 " Tags
 Plug 'ludovicchabant/vim-gutentags'
@@ -91,15 +89,11 @@ Plug 'heavenshell/vim-jsdoc'                                " Generate JSDoc com
 Plug 'sheerun/vim-polyglot'
 Plug 'othree/javascript-libraries-syntax.vim'                           " Syntax highlighting for javascript libraries
 
-" File explorer
-Plug 'francoiscabrol/ranger.vim'
-Plug 'kevinhwang91/rnvimr', {'do': 'make sync'}
-Plug 'rbgrouleff/bclose.vim'
-
 " === File navigation ===
 Plug 'ptzz/lf.vim'                                          " Use lf.vim and vim-floaterm together
 Plug 'voldikss/vim-floaterm'
 Plug 'christoomey/vim-tmux-navigator'                       " Tmux/Neovim movement integration - performance is bad
+Plug 'rbgrouleff/bclose.vim'
 " interesting file navigator in modal window
 "Plug 'liuchengxu/vim-clap'
 
@@ -108,11 +102,7 @@ Plug 'mhinz/vim-startify'                           " project
 Plug 'airblade/vim-rooter' "for startify in there is .git or tags file or smth I'll add
 
 " Colorscheme / statusline / icons
-Plug 'arcticicestudio/nord-vim'
-Plug 'joshdick/onedark.vim'
 Plug 'projekt0n/github-nvim-theme'
-"Plug 'vim-airline/vim-airline'
-"Plug 'vim-airline/vim-airline-themes'
 Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'nvim-lualine/lualine.nvim'
 Plug 'akinsho/bufferline.nvim'

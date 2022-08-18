@@ -84,4 +84,9 @@ trash() { command mv "$@" ~/.Trash ; }             # trash:        Moves a file 
 spotlight() { mdfind "kMDItemDisplayName == '$@'wc" ; }
 makefile_1mb() { mkfile 1m ./1MB.dat ; }           # makefile_1mb:      Creates a file of 1mb size (all zeros)
 makefile_5mb() { mkfile 5m ./5MB.dat ; }           # makefile_5mb:      Creates a file of 5mb size (all zeros)
-makefile_10mb() { mkfile 10m ./10MB.dat ; }        # makefile_10mb:     Creates a file of 10mb size (all zeros)
+makefile_10mb() { mkfile 10m ./10MB.dat ; }        # makefile_10mb:     Creates a file of 10mbsize (all zeros)
+
+#Downloads a .mp3 file
+dlmp3 () { youtube-dl --extract-audio --audio-format mp3 $1 }
+dlmp4 () { youtube-dl -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' $1 }
+

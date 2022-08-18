@@ -46,8 +46,8 @@ sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
 ## Set highlight color to green
 #defaults write NSGlobalDomain AppleHighlightColor -string "0.764700 0.976500 0.568600"
 
-## Set sidebar icon size to medium
-#defaults write NSGlobalDomain NSTableViewDefaultSizeMode -int 2
+## Set sidebar icon size to medium System Preferences > General > Sidebar icon size: Medium
+defaults write -globalDomain NSTableViewDefaultSizeMode -int 2
 
 ## Always show scrollbars
 defaults write NSGlobalDomain AppleShowScrollBars -string "Always"
@@ -259,7 +259,7 @@ defaults write com.apple.screencapture location ~/Documents/Screenshots
 killall SystemUIServer
 
 ## Save screenshots in PNG format (other options: BMP, GIF, JPG, PDF, TIFF)
-defaults write com.apple.screencapture type -string "png"
+defaults write com.apple.screencapture type -string "jpg"
 
 ## Disable shadow in screenshots
 defaults write com.apple.screencapture disable-shadow -bool true
@@ -314,7 +314,9 @@ defaults write com.apple.finder _FXSortFoldersFirst -bool true
 defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
 
 ## Disable the warning when changing a file extension
-#defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+# Finder > Preferences > Show warning before removing from iCloud Drive
+defaults write com.apple.finder FXEnableRemoveFromICloudDriveWarning -bool false
 
 ## Enable spring loading for directories
 #defaults write NSGlobalDomain com.apple.springing.enabled -bool true
@@ -445,12 +447,15 @@ defaults write com.apple.dock autohide -bool true
 ## Don’t show recent applications in Dock
 #defaults write com.apple.dock show-recents -bool false
 
+# Launchpad row and columns
+defaults write com.apple.dock springboard-rows -int 5
+defaults write com.apple.dock springboard-columns -int 7
+
 ## Disable the Launchpad gesture (pinch with thumb and three fingers)
 ##defaults write com.apple.dock showLaunchpadGestureEnabled -int 0
 
 ## Reset Launchpad, but keep the desktop wallpaper intact
 #find "${HOME}/Library/Application Support/Dock" -name "*-*.db" -maxdepth 1 -delete
-
 ## Add iOS & Watch Simulator to Launchpad
 #sudo ln -sf "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app" "/Applications/Simulator.app"
 #sudo ln -sf "/Applications/Xcode.app/Contents/Developer/Applications/Simulator (Watch).app" "/Applications/Simulator (Watch).app"
@@ -498,8 +503,8 @@ defaults write com.apple.Safari UniversalSearchEnabled -bool false
 defaults write com.apple.Safari SuppressSearchSuggestions -bool true
 
 ## Press Tab to highlight each item on a web page
-#defaults write com.apple.Safari WebKitTabToLinksPreferenceKey -bool true
-#defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2TabsToLinks -bool true
+defaults write com.apple.Safari WebKitTabToLinksPreferenceKey -bool true
+defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2TabsToLinks -bool true
 
 ## Show the full URL in the address bar (note: this still hides the scheme)
 defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
@@ -523,7 +528,7 @@ defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebK
 #defaults write com.apple.Safari DebugSnapshotsUpdatePolicy -int 2
 
 ## Enable Safari’s debug menu
-#defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
+defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
 
 ## Make Safari’s search banners default to Contains instead of Starts With
 #defaults write com.apple.Safari FindOnPageMatchesWordStartsOnly -bool false
@@ -551,7 +556,7 @@ defaults write com.apple.Safari WebAutomaticSpellingCorrectionEnabled -bool fals
 #defaults write com.apple.Safari AutoFillMiscellaneousForms -bool false
 
 ## Warn about fraudulent websites
-#defaults write com.apple.Safari WarnAboutFraudulentWebsites -bool true
+defaults write com.apple.Safari WarnAboutFraudulentWebsites -bool true
 
 ## Disable plug-ins
 #defaults write com.apple.Safari WebKitPluginsEnabled -bool false
@@ -898,16 +903,6 @@ defaults write -globalDomain AppleInterfaceStyleSwitchesAutomatically -bool true
 # System Preferences > General > Click in the scrollbar to: Jump to the spot that's clicked
 defaults write -globalDomain AppleScrollerPagingBehavior -bool true
 
-# System Preferences > General > Sidebar icon size: Medium
-defaults write -globalDomain NSTableViewDefaultSizeMode -int 2
-
-
-# Finder > Preferences > Show wraning before changing an extension
-defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
-
-# Finder > Preferences > Show wraning before removing from iCloud Drive
-defaults write com.apple.finder FXEnableRemoveFromICloudDriveWarning -bool false
-
 
 #Тёмные Dock и Menu Bar при светлой теме macOS
 defaults write -g NSRequiresAquaSystemAppearance -bool Yes
@@ -923,8 +918,6 @@ defaults -currentHost write com.apple.screensaver idleTime -int 0
 osascript -e 'id of app "Safari"'
 defaults write com.apple.safari NSRequiresAquaSystemAppearance -bool yes
 
-defaults write com.apple.dock springboard-rows -int 6
-defaults write com.apple.dock springboard-columns -int 8;
 
 #– отключение задержки при перетаскивании окна (значение по умолчанию 0,75)
 defaults write com.apple.dock workspaces-edge-delay -float 0.1

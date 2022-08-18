@@ -8,9 +8,6 @@ source ~/.config/nvim/keys.vim
 source ~/.config/nvim/commands.vim
 source ~/.config/nvim/plugins_config.vim
 
-let g:python_host_prog = '/usr/bin/python'
-let g:python3_host_prog = '/usr/local/bin/python3'
-
 " =============================================================================
 " CHECK OS
 " =============================================================================

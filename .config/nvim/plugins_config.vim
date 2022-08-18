@@ -284,22 +284,6 @@ let g:fzf_action = {
 
   " use bottom positioned 20% height bottom split
   "let g:fzf_layout = { 'down': '~50%' }
-
-  let g:fzf_colors =
-  \ { 'fg':      ['fg', 'Normal'],
-    \ 'bg':      ['bg', 'Clear'],
-    \ 'hl':      ['fg', 'String'],
-    \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-    \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-    \ 'hl+':     ['fg', 'Statement'],
-    \ 'info':    ['fg', 'PreProc'],
-    \ 'prompt':  ['fg', 'Conditional'],
-    \ 'pointer': ['fg', 'Exception'],
-    \ 'marker':  ['fg', 'Keyword'],
-    \ 'spinner': ['fg', 'Label'],
-    \ 'header':  ['fg', 'Comment'] }
-
-
 "}}}
 
 "{{{  #Vista
@@ -387,11 +371,6 @@ let g:gutentags_ctags_exclude = [
       \ '*.pdf', '*.doc', '*.docx', '*.ppt', '*.pptx',
       \ ]
 "}}}"
-
-"" {{{ Plugin ---------- Ranger RnvimR
-let g:rnvimr_ex_enable = 1
-nmap <space>ran :RnvimrToggle<CR>
-""}}}
 
 
 "" {{{ Plugin ---------- vim-dadbod
