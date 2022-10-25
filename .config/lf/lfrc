@@ -33,7 +33,7 @@ set preview true
 set ignorecase true
 
 set incsearch
-set scrolloff 10
+set scrolloff 10 # leave some space at the top and the bottom of the screen
 set tabstop 2
 set smartcase
 
@@ -67,14 +67,12 @@ map DD delete
 map x cut
 map yy copy
 map <enter> open
-map bg setwallpaper
 #map o open_config
-map br $vimv $fx
 map rr rename
 map H top
 map L bottom
 map R reload
-#map C clear
+map cc clear
 map U unselect
 
 # Tmux
@@ -98,6 +96,9 @@ map Q $$SHELL
 # you can also send remote commands.
 map <c-c> cmd-interrupt
 
+map ms push :mark-save<space>
+map ml push :mark-load<enter>
+
 map p
 map pp paste
 # paste as a symbolic link to original
@@ -117,55 +118,42 @@ cmd paste_link %{{
 }}
 map pl paste_link
 
-# leave some space at the top and the bottom of the screen
-set scrolloff 10
-
 # execute current file (must be executable)
 #map x $$f
 #map X !$f
 
 # dedicated keys for file opener actions
 #map o &mimeopen $f
-#map O $mimeopen --ask $f
+map O $mimeopen --ask $f
 
 cmd open-with %"$@" $fx
 map ` push :open-with<space>
 
+# Replace open command with robust selection of openers
 cmd open ${{
-    case $(file --dereference --mime-type $f -b) in
-        inode/x-empty) $EDITOR $fx ;;
-        text/*) $EDITOR $fx;;
-        *) for f in $fx; do $OPENER $f > /dev/null 2> /dev/null & done;;
-    esac
+	case $(file --dereference --mime-type $f -b) in
+		inode/x-empty) $EDITOR $fx ;;
+		text/*) $EDITOR $fx;;
+		#video/*) nohup mpv $fx > /dev/null & ;;
+		#audio/*) nohup mpv $fx > /dev/null & ;;
+		#audio/midi) timidity $fx ;;
+		#application/epub+zip) nohup FBReader $f > /dev/null & ;;
+		#application/pdf) nohup zathura $f > /dev/null & ;;
+		*) for f in $fx; do $OPENER $f > /dev/null 2> /dev/null & done;;
+	esac
 }}
 
-# move selected files in NEW folder
-cmd newfold ${{
-    set -f
-    read newd
-    mkdir -- "$newd"
-    mv -- $fx "$newd"
-}}
-map <c-n> newfold
 
-cmd mkdir %mkdir -p "$@"
-map ad push :mkdir<space>
+cmd mkdir %[ -n "${1}" ] && mkdir -p ${@} || echo "Argument needed"
+cmd mkfile %[ -n "${1}" ] && touch ${@} || echo "Argument needed"
 
-cmd touch %touch  "$@"
-map af push :touch<space>
+#cmd mkdir %mkdir -p "$@"
+map md push :mkdir<space>
 
-# {{{ === Make files, dirs
-cmd mkdir ${{
-  printf "Directory Name: "
-  read ans
-  mkdir $ans
-}}
+#cmd touch %touch  "$@"
+map mf push :mkfile<space>
 
-cmd mkfile ${{
-  printf "File Name: "
-  read ans
-  $EDITOR $ans
-}}
+## {{{ === Make files, dirs
 
 cmd chmod ${{
   printf "Mode Bits: "
@@ -179,17 +167,7 @@ cmd chmod ${{
   lf -remote 'send reload'
 }}
 
-cmd sudomkfile ${{
-  printf "File Name: "
-  read ans
-  sudo $EDITOR $ans
-}}
-
-map mf mkfile
-map md mkdir
 map ch chmod
-map mr sudomkfile
-map ms $mkscript
 # }}} === Make files, dirs
 
 cmd open_config  ${{
@@ -276,6 +254,16 @@ map tu extract
 
 # {{{ <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Trash <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 # Implement trash command
+# Implement trash command
+cmd trash2 ${{
+	set -f
+	if hash trash-put 2>/dev/null; then
+		trash-put -v -- $fx
+	else
+		mkdir -p "$HOME"/.trash
+		mv -vi $fx "$HOME"/.trash
+	fi
+}}
 # trash command with confirmation
 cmd trash %{{
     for f in $fx; do
@@ -288,10 +276,15 @@ cmd trash %{{
         esac
     done
 }}
+cmd restore_trash ${{
+  trash-restore
+}}
 # Trash Mappings
 map dd trash
 cmd clear_trash %trash-empty
 map tc clear_trash
+
+map tR restore_trash
 
 # move current file or selected files to trash folder
 # (also see 'man mv' for backup/overwrite options)
@@ -332,7 +325,7 @@ map I $$PAGER "$f"
 # {{{ <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Sort <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 map sn :{{ set sortby natural; set info size; set preview; set ratios 1:2:3; }}
 map sa :{{ set sortby natural; set info size; set nopreview; set ratios 3:5; }}
-map ss :{{ set sortby size; set info size; set preview; }}
+map ss :{{ set sortby size; set info size; set preview; calcdirsize; }}
 map st :{{ set sortby time; set info time; set preview; }}
 # }}} >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Sort >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -344,8 +337,8 @@ map oC ${{code .}}
 map gtr cd ~/.Trash/
 map gT cd ~/.local/share/Trash/files/
 
+map g/ cd /
 map gul cd /usr/local/
-map gr cd /
 map gy. cd ~/videos/youtube
 map gc cd ~/code
 map g. cd ~/.config
@@ -393,7 +386,38 @@ cmd fzf_search ${{
 }}
 map <c-g> :fzf_search
 
-cmd z %{{
+cmd fzf_z ${{
+	sel="$(zoxide query -l | fzf +s)"
+	[ -d "$sel" ] && lf -remote "send $id cd \"$sel\""
+}}
+
+# quickly cd into frecent directories using zoxide, zlua or rupa/z
+cmd z ${{
+	set +u
+	dest=''
+	prefix=''
+	[[ "$OSTYPE" == "darwin"* ]] && prefix='/usr/local'
+	if hash zoxide 2>/dev/null; then
+		dest="$(zoxide query "$@")"
+	# See: https://github.com/skywind3000/z.lua
+	elif [ -f "$prefix/etc/profile.d/z.lua" ]; then
+		export _ZL_NO_PROMPT_COMMAND=1
+		dest="$(lua "$prefix/etc/profile.d/z.lua" -e "$@")"
+	# See https://github.com/rupa/z
+	elif [ -f "$prefix/etc/profile.d/z.sh" ] || [ -f "$prefix/share/z/z.sh"]; then
+		export _Z_NO_PROMPT_COMMAND=1
+		source "$prefix/etc/profile.d/z.sh" || source "$prefix/share/z/z.sh"
+		dest="$(_z "$@" && pwd)"
+	fi
+
+	if test -n "${dest}"; then
+		lf -remote "send $id cd '${dest}'"
+	else
+		lf -remote "send $id echo 'Invalid directory ${dest}'"
+	fi
+}}
+
+cmd zz %{{
     result="$(zoxide query --exclude "${PWD}" -- "$1")"
     lf -remote "send ${id} cd '${result}'"
 }}
@@ -552,10 +576,10 @@ map zp nopreview
 # {{{ <<<<<<<<<<<<<<<<<<<<<<<<< Disk Usage <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 #show disk usage
 #map du !du -h -d 1
-map dU !du -h -d 1 | sort -rh
 #map du !du -hsx * | sort -rh | less
 map du !ncdu
-map di !stat $f; echo ; du -sh $f ; echo ; file -I -b -p $f
+map dU !du -hsx * | sort -rh | less
+map di !gstat $f || stat $f; echo ; du -sh $f ; echo ; file -I -b -p $f
 
 # Broot Mapping
 cmd broot_jump ${{
@@ -604,8 +628,8 @@ cmd on-cd &{{
 # also run at startup
 on-cd
 
-# show info in status line
-map <esc> :{{
+# show size info in status line
+map sI :{{
     %echo -e " \033[1;34mPWD\033[0m" $(du -sh . | awk '{ print $1 }')  $(\ls -lAFh | \grep '/$' | wc -l)  $(\ls -lAFh | \grep -v '^d' | sed '1d' | wc -l)
     clear
     unselect
@@ -613,9 +637,30 @@ map <esc> :{{
 }}
 
 cmd size %{{
-    fmt="\033[0;49;34m %w/\033[0m\033[0;49;37m%f\033[0m $(du -sh . | awk '{ print $1 }')"
-    lf -remote "send $id set promptfmt \"$fmt\""
+    #fmt="\033[0;49;34m %w/\033[0m\033[0;49;37m%f\033[0m $(du -sh $fx | awk '{ print $1 }')"
+    #lf -remote "send $id set promptfmt \"$fmt\""
+    lf -remote "send $id set info size"
+    lf -remote "send $id calcdirsize $fx"
+    lf -remote "send $id unselect"
     #lf -remote "set promptfmt ''"
 }}
 map si size
 
+
+# dynamically set info displayed based on the number of columns
+cmd resize %{{
+	w=$(tmux display-message -p '#{pane_width}' || tput cols)
+	# w=$(tput cols)
+	if [ $w -le 62 ]; then
+		lf -remote "send $id set ratios 1:4"
+		lf -remote "send $id set nopreview"
+	elif [ $w -le 80 ]; then
+		lf -remote "send $id set ratios 1:2:2"
+	elif [ $w -le 100 ]; then
+		lf -remote "send $id set ratios 1:2:3"
+	else
+		lf -remote "send $id set ratios 2:4:5"
+	fi
+	# lf -remote "send $id echo 'ui adjusted for width of $w'"
+}}
+resize

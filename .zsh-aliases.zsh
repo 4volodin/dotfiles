@@ -131,7 +131,10 @@ alias mongostatus='brew services list'
 alias mongostop='brew services stop mongodb-community'
 
 alias brewclean='brew cleanup -s && rm -rf `brew --cache`'
-alias brewupgrade='brew update; brew upgrade; brew cleanup -s; brew doctor; brew missing'
+# Update, upgrade all and cleanup
+alias brewupgrade='brew update && brew upgrade && brew cu --all --yes --cleanup && mas upgrade && brew doctor; brew missing; brewclean'
+# Dump all taps, apps, casks and mac apps into ~/Brewfile
+alias brewdump='brew bundle dump --force --describe --file=~/Brewfile'
 
 alias setproxy='export http_proxy=socks5://127.0.0.1:9050'  # 'curl ifconfig.me' if it shows your proxy IP and it means that your are success
 alias unsetproxy='unset http_proxy'

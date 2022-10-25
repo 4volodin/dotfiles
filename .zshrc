@@ -64,6 +64,7 @@ eval "$(zoxide init zsh)"
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 eval "$(starship init zsh)"
+eval "$(zoxide init zsh --cmd cd)"
 
 #bindkey '\t' menu-complete
 

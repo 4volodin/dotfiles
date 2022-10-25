@@ -63,7 +63,7 @@ yabai -m rule --add app="^Notes$" space=5-Media manage=off #grid=1:1:0:0:1:1
 yabai -m rule --add app="^FirstSeed Calendar$" space=5-Media manage=off #grid=1:1:0:0:1:1
 yabai -m rule --add app="^Toggl Track$" space=5-Media manage=off #grid=1:1:0:0:1:1
 yabai -m rule --add app="^TeamViewer$" space=5-Media manage=off
-yabai -m rule --add app="^(Mail|Music|Anki)$" space=5-Media manage=off
+yabai -m rule --add app="^(Mail|Music)$" space=5-Media manage=off
 yabai -m rule --add app="^(Telegram|Slack|Messages)$" space=5-Media
 yabai -m rule --add app="^FaceTime$" space=5-Media manage=off
 
