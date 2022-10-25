@@ -1,10 +1,10 @@
 # Very Useful aliases!!!!
 # analog 'tree' command
 # alias tree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
-alias gitdot="/usr/bin/git --git-dir=$HOME/.dotfiles.git/ --work-tree=$HOME"
+alias gitdot="$(which git) --git-dir=$HOME/.dotfiles.git/ --work-tree=$HOME"
 
-alias dotfiles="/usr/bin/git --git-dir=$HOME/.dotfiles.git/ --work-tree=$HOME"
-alias libfiles="/usr/bin/git --git-dir=$HOME/.libfiles.git/ --work-tree=$HOME"
+alias dotfiles="$(which git) --git-dir=$HOME/.dotfiles.git/ --work-tree=$HOME"
+alias libfiles="$(which git) --git-dir=$HOME/.libfiles.git/ --work-tree=$HOME"
 alias pullall="find . -maxdepth 3 -name .git -type d | rev | cut -c 6- | rev | xargs -I {} git -C {} pull"
 alias multipull="find . -mindepth 1 -maxdepth 1 -type d -print -exec git -C {} pull \;"
 
