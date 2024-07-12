@@ -3,6 +3,7 @@
 # otherwise I get error gpg: signing failed: Inappropriate ioctl for device
 export GPG_TTY=$(tty)
 
+
 # Prefer US English and use UTF-8.
 export LANG='en_US.UTF-8';
 export LC_ALL='en_US.UTF-8';
@@ -18,7 +19,15 @@ export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden'
 export LANG=en_US
 
 # needed for tmux colors
-export TERM="screen-256color"
+#export TERM="screen-256color"
+export TERM=xterm-256color
+
+# it's need, because HOME, END don't work in tmux
+if [[ -n "$TMUX" ]]; then
+    bind '"\e[1~":"\eOH"'
+    bind '"\e[4~":"\eOF"'
+fi
+
 #
 # Make some commands not show up in history
 export HISTIGNORE="ls:cd:cd -:pwd:exit:date:* --help";
@@ -141,7 +150,8 @@ shopt -s dotglob
 #PS1="\[\033[1;33;1;32m\]\u@\h:\[\033[1;31m\]\w$ \[\033[0m\]\[\033[0m\]"
 #PS1="\[\e[0;31m\]\u\[\e[m\] \[\e[1;34m\]\w[\e[m\] \[\e[1;32m\]\$\[\e[m\]"
 #PS1="\[\033[1;33;1;32m\]\u@\h:\[\033[1;31m\]\w$ \[\033[0m\]\[\033[0m\]"
-
+#
+source $HOME/.general-functions.sh
 
 __git_status_info() {
     STATUS=$(git status 2>/dev/null |
@@ -233,3 +243,4 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 #eval "$(starship init bash)"
+. "$HOME/.cargo/env"

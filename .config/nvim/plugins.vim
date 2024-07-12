@@ -1,6 +1,3 @@
-" ============================================================================ "
-" ===                               PLUGINS                                === "
-" ============================================================================ "
 " check whether vim-plug is installed and install it if necessary
 let plugpath = expand('<sfile>:p:h'). '/autoload/plug.vim'
 if !filereadable(plugpath)
@@ -17,104 +14,65 @@ if !filereadable(plugpath)
     endif
 endif
 
+" ============================================================================ "
+" PLUGINS {{{
+" ============================================================================ "
 call plug#begin('~/.config/nvim/plugged')
 
-
-Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
-
-Plug 'ntpeters/vim-better-whitespace'               " Trailing whitespace highlighting & automatic fixing
-
-"Plug 'wakatime/vim-wakatime'
-Plug 'rizzatti/dash.vim'
-"Plug 'tpope/vim-sensible'
-"
-""Plugin for SQL databases
-Plug 'tpope/vim-dadbod'
-Plug 'kristijanhusak/vim-dadbod-ui'
-
-Plug 'ekalinin/Dockerfile.vim', { 'for': 'Dockerfile' }
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
-
-Plug 'easymotion/vim-easymotion'                            " Improved motion in Vim
-
-Plug 'terryma/vim-expand-region'
-
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-
+" User interface
+Plug 'mhinz/vim-startify'
+Plug 'mbbill/undotree'
 Plug 'troydm/zoomwintab.vim'
+Plug 'christoomey/vim-tmux-navigator'
 
-Plug 'tpope/vim-repeat'
-Plug 'michaeljsmith/vim-indent-object'
-
-Plug 'scrooloose/nerdcommenter'                             "Plug 'tpope/vim-commentary'
-"Plug 'puremourning/vimspector'                                  " debugger
-
-
-Plug 'mbbill/undotree'                                          " Undotree gives you a tree view with the buffer changes where you can navigate through them.
-Plug 'machakann/vim-highlightedyank'                            " highlight yanked text
-
-"Plug 'wellle/tmux-complete.vim'
-
-" PlugInstall and PlugUpdate will clone fzf in ~/.fzf and run the install script
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
-Plug 'haya14busa/incsearch.vim'
-"Plug 'Shougo/denite.nvim'                                      " Denite - Fuzzy finding, buffer management
-
-Plug 'honza/vim-snippets'
-Plug 'editorconfig/editorconfig-vim'
-
-" Tags
-Plug 'ludovicchabant/vim-gutentags'
-Plug 'liuchengxu/vista.vim'
-
-
-" === Git Plugins === "
-Plug 'mhinz/vim-signify'                                " Enable git changes to be shown in sign column
-Plug 'tpope/vim-fugitive'
-Plug 'rbong/vim-flog'
-"Plug 'airblade/vim-gitgutter'
-Plug 'rhysd/git-messenger.vim'
-Plug 'jreybert/vimagit'
-
-Plug 'AndrewRadev/tagalong.vim'
-Plug 'Shougo/echodoc.vim'                                   " Print function signatures in echo area
-
-" === Javascript Plugins === "
-Plug 'leafgarland/typescript-vim'
-Plug 'peitalin/vim-jsx-typescript'
-Plug 'heavenshell/vim-jsdoc'                                " Generate JSDoc commands based on function signature
-
-" === Syntax Highlighting === "
-Plug 'sheerun/vim-polyglot'
-Plug 'othree/javascript-libraries-syntax.vim'                           " Syntax highlighting for javascript libraries
-
-" === File navigation ===
-Plug 'ptzz/lf.vim'                                          " Use lf.vim and vim-floaterm together
-Plug 'voldikss/vim-floaterm'
-Plug 'christoomey/vim-tmux-navigator'                       " Tmux/Neovim movement integration - performance is bad
-Plug 'rbgrouleff/bclose.vim'
-" interesting file navigator in modal window
-"Plug 'liuchengxu/vim-clap'
-
-" Projects
-Plug 'mhinz/vim-startify'                           " project
-Plug 'airblade/vim-rooter' "for startify in there is .git or tags file or smth I'll add
+"" Text editing
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-surround'
+Plug 'machakann/vim-highlightedyank'
+Plug 'terryma/vim-expand-region'                            " select text in expand region: + _
+Plug 'michaeljsmith/vim-indent-object'                      " select indented text: vii, vai, vaI    https://www.seanh.cc/2020/08/08/vim-indent-object/
+Plug 'easymotion/vim-easymotion'
+Plug 'ntpeters/vim-better-whitespace'
 
 " Colorscheme / statusline / icons
 Plug 'projekt0n/github-nvim-theme'
-Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'nvim-lualine/lualine.nvim'
 Plug 'akinsho/bufferline.nvim'
-Plug 'kyazdani42/nvim-web-devicons'
-Plug 'ryanoasis/vim-devicons'
 
-Plug 'justinmk/vim-sneak'                           " if enable it plugin -> stop working 's' in visual mode for Surrounding Plugin
-Plug 'tpope/vim-surround'
-Plug 'machakann/vim-sandwich'
-"Plug 'terryma/vim-multiple-cursors'
+" File explorer
+Plug 'nvim-tree/nvim-tree.lua'
+Plug 'nvim-tree/nvim-web-devicons'
 
-" display the hexadecimal colors - useful for css and color config
-"Plug 'ap/vim-css-color'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.3' }
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
+
+" Find
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+
+" Terminal
+Plug 'akinsho/toggleterm.nvim'
+
+" Static code check
+Plug 'editorconfig/editorconfig-vim'
+
+" Git
+Plug 'airblade/vim-gitgutter'
+
+" specific files
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
+Plug 'ekalinin/Dockerfile.vim', { 'for': 'Dockerfile' }
+
+" Others
+Plug 'ojroques/vim-oscyank', {'branch': 'main'}              " copy text through SSH with OSC52
+
+" LSP and completion
+Plug 'neovim/nvim-lspconfig'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'saadparwaiz1/cmp_luasnip'
+Plug 'L3MON4D3/LuaSnip'
 
 call plug#end()
+" }}} Plugins

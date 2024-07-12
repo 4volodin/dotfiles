@@ -8,7 +8,17 @@ export NVIM_TUI_ENABLE_TRUE_COLOR=1 # Enabled true color support for terminals
 
 export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/MacGPG2/bin:$PATH
+
+export PATH="$HOME/bin:$PATH"
 export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH+:$PATH}";
+
+export GPG_TTY=$(tty)
+export GPG_TTY SSH_AUTH_SOCK
+
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/openjdk.jdk/Contents/Home
+
+# to get rid of "application downloaded from the internet" message when installing(update) homebrew casks
+export HOMEBREW_CASK_OPTS=--no-quarantine
 
 #export PATH=/usr/local/opt/python/libexec/bin:$PATH PATHS
 #export PATH="/usr/local/opt/python@2/libexec/bin:$PATH"
@@ -35,12 +45,17 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # ====================================================================
 # History
 # ====================================================================
-export HISTIGNORE="ls:cd:cd -:pwd:exit:date:* --help"; # Make some commands not show up in history
 HISTFILE=$HOME/.zsh_history
 HISTSIZE=100000
 SAVEHIST=$HISTSIZE
 export HISTFILESIZE=$HISTSIZE;
-export HISTCONTROL=ignoredups;
+export HISTIGNORE="ls:cd:cd -:pwd:exit:date:* --help"; # Make some commands not show up in history
+export HISTCONTROL=ignorespace:ignoredups
+# Опции истории команд
+setopt extended_history #Добавляет в историю время выполнения команды.
+setopt HIST_REDUCE_BLANKS ## Удалять из файл истории пустые строки
+setopt HIST_NO_STORE # команды «history» и «fc» в историю заноситься не будут
+setopt NOTIFY #Сообщать при изменении статуса фонового задания
 # ====================================================================
 
 # ====================================================================
@@ -93,3 +108,4 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 # END ANSIBLE MANAGED BLOCK
+#

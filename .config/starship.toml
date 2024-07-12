@@ -1,82 +1,121 @@
+# the sequence items in the prompt depends on sequence [element] in this file
+# set $ in format - create new line
+
 # Replace the "❯" symbol in the prompt with "❯❯"
 add_newline = true
-format = "$all$git_branch$git_status$character"
+#format = "$all$git_branch$git_status$character"
+format = """ $env_var $all $character"""  # Add custom formatting before other stuff
+
+
+# Shows an icon depending on what distro it is running on
+[env_var.STARSHIP_DISTRO]
+format = '[$env_value](bold grey) '
+variable = "STARSHIP_DISTRO"
+disabled = false
+
+[username]
+style_user = 'purple bold'
+style_root = 'black bold'
+format = '[$user]($style) '
+disabled = false
+show_always = true
+
+[hostname]
+ssh_only = true
+format =  "on [$hostname](bold blue) ❯ "
 
 [character]
 success_symbol = "[❯](bold green) "
 error_symbol = "[✗](bold red) "
 
-# Disable the package module, hiding it from the prompt completely
-[package]
-disabled = true
-
-# Disable the AWS module.
-[aws]
-disabled = true
-format = '\[AWS: [$profile/($region)]($style)\]'
-symbol = ''
-style = 'bold white'
-
 [custom.tztime]
 #command = 'date +"%a %b %d %Y %l:%M%p (%Z%z)"'
 command = 'date +"%l:%M%p"'
 when = "true"
-format = '[\[$symbol($output)\]](bold black)'
+format = '[\[$symbol($output)\]](black)'
 
-# Set the time format
-[time]
-format = "[at](bold black) [$time ](bold black)"
-disabled = true
-use_12hr = true
-#time_format = "%Y-%m-%d %H:%M:%S"
-time_format = "%r"
-utc_time_offset = "+4"
+[cmd_duration]
+min_time = 500
+format = '[ took $duration](black)'
 
 # Directory setttings
 [directory]
 format = "[$path]($style)[$read_only]($read_only_style) "
-truncation_length = 3
+truncation_length = 2
 truncate_to_repo = false
 truncation_symbol = "…/"
+home_symbol = "󰚡 ~"
+read_only_style = "197"
+read_only = "  "
 
-[username]
-#disabled = true
-style_user = "bold green"
-style_root = "black"
-format = "[$user]($style)[@](white)"
-disabled = false
-show_always = true
-
-[hostname]
-ssh_only = false
-format =  "[$hostname](bold green) ❯ "
 
 # Workaround for slow prompt with git status
 [git_branch]
 style = "bold yellow"
+#symbol = " "
+format = "via [$symbol$branch]($style) "
+# truncation_length = 4
+truncation_symbol = "…/"
 
 [git_status]
-ahead = "[](purple)[$count](white)"
-behind = "[](cyan)[$count](white)"
+style = "bold bright-grey"
+up_to_date = ""
+ahead = "[⇡](purple)[$count](grey)"
+behind = "[⇣](cyan)[$count](grey)"
 conflicted = '[=$count](yellow)'
-deleted = '[✘$count](black)'
-diverged = "[](cyan)[$ahead_count](white)[](purple)[$behind_count](white)"
+deleted = '[$count](green)'
+diverged = "⇕[⇡](cyan)[$ahead_count](grey)[⇣](purple)[$behind_count](grey)"
 modified = '[*$count](red)'
 renamed = "[»$count](purple)"
-staged = "[+$count](green)"
-stashed = "[\\$$count](yellow)"
-style = "bold bright-white"
+staged = '[++$count](green)'
+stashed = "[$count](yellow)"
 untracked = "[?$count](cyan)"
 
 [git_commit]
 style = "bold black"
 format = "[$hash]($style) [$tag]($style)"
 
+
 [ruby]
+disabled = true
 symbol = " "
 
 [nodejs]
-symbol = " "
+disabled = false
+symbol = " "
 
 [python]
-symbol = " "
+disabled = false
+symbol = " "
+pyenv_prefix = "pyenv"
+pyenv_version_name = true
+python_binary = ['./venv/bin/python', 'python', 'python3', 'python2']
+format = 'via [${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
+
+[kubernetes]
+disabled = false
+format = 'via [🅚 $context\($namespace\)](bold purple) '
+
+[helm]
+disabled = false
+detect_files = ['helmfile.yaml', 'Chart.yaml']
+symbol = "Helm "
+style = "bold purple"
+format = 'via [⎈ $symbol($version )]($style)'
+
+[terraform]
+symbol = "󱁢 "
+format = 'via [$symbol$workspace]($style) '
+detect_extensions = ['tf', 'tfplan', 'tfstate']
+detect_folders = ['.terraform']
+
+# Disable the AWS module.
+[aws]
+format = '\[${symbol}: [$profile/($region)]($style)\]'
+symbol = '󰸏 '
+style = 'bold white'
+
+# Disable the package module, hiding it from the prompt completely
+[package]
+disabled = true
+

@@ -11,8 +11,46 @@ alias multipull="find . -mindepth 1 -maxdepth 1 -type d -print -exec git -C {} p
 alias intel="env /usr/bin/arch -x86_64 /bin/zsh --login"
 alias arm="env /usr/bin/arch -arm64 /bin/zsh --login"
 
+alias java-arm="export JAVA_HOME=`/usr/libexec/java_home --arch arm64`; java -version"
+alias java-intel="export JAVA_HOME=`/usr/libexec/java_home --arch x86_64`; java -version"
+
 # Generate a secure password and copy it to clipboard
-alias genpass='LC_ALL=C tr -dc "[:alnum:]" < /dev/urandom | head -c 20 | pbcopy'
+alias rand='LC_ALL=C tr -dc "[:alnum:]" < /dev/urandom | head -c 20 | pbcopy'
+alias pass='openssl rand -base64 32 | pbcopy'
+
+# terraform
+alias tf='terraform'
+
+# vault
+alias va='vault'
+
+# k8s
+alias k='kubectl'
+alias kga='kubectl get all'
+
+# Получить текущий контекст
+alias kgc='kubectl config current-context'
+# Список всех контекстов
+alias klc='kubectl config get-contexts -o name | sed "s/^/  /; /$(kgc)/s/ /*/"'
+# Изменить текущий контекст analog for `alias kctx='kubectx'`
+alias kc='kubectl config use-context "$(klc | fzf -e | sed "s/^..//")"'
+
+
+# Получить текущее пространство имен
+alias kgn='kubectl config get-contexts --no-headers "$(kgc)" | awk "{print $5}" | sed "s/^$/default/"'
+# Список всех пространств имен
+alias kln='kubectl get ns -o name | sed "s|^.*\/|  |; /$(kgn)/s/ /*/"'
+# Изменить текущее пространство имен, analog for `alias kns='kubens'`
+alias kns='kubectl config set-context --current --namespace "$(kln | fzf -e | sed "s/^..//")"'
+
+alias kstatus="{
+  clear &&
+  echo -e \"\n=== Kubernetes Status ===\n\" &&
+  kubectl get --raw '/healthz?verbose' &&
+  kubectl version &&
+  kubectl get nodes &&
+  kubectl cluster-info
+} | grep -E 'Ready|ok|passed|running'"
 
 # browser-sync config
 # Get the current local IP address
@@ -38,6 +76,10 @@ alias ft="rg --vimgrep --color ansi --no-heading  --ignore-case --no-ignore --hi
 ## output  file without comments
 alias viewg="grep '^[^#;/*]'"
 alias views="sed -e '/^#/d'"
+
+alias getgpg="gpg --armor --export 4volodin | pbcopy"
+alias getssh="ssh-add -L | grep 'cardno' | pbcopy"
+
 
 alias chmod755='find . -type d -exec chmod 0755 {} \;'
 alias chmod644='find . -type f -exec chmod 0644 {} \;'
@@ -74,6 +116,7 @@ alias grep='grep --colour=auto'
 alias ducks='du -chsh * | sort -rn | head -11'
 alias wea='curl wttr.in'
 alias vtop="vtop --theme=wizard"
+alias ports="lsof -Pn | grep LISTEN"
 
 # it will launch ranger and dtop you in the last visited folder when you exit
 alias ran='ranger --choosedir=$HOME/.rangerdir; LASTDIR=`cat $HOME/.rangerdir`; cd "$LASTDIR"'
@@ -82,7 +125,6 @@ alias rang='source ranger'
 alias vi='nvim'
 alias nv="$(which nvim)"
 alias vi="$(which nvim)"
-alias vim="/usr/local/Cellar/vim/8.1.1050/bin/vim"
 alias pstorm='open -a PhpStorm'
 alias pstorm2='open -a /Applications/PhpStorm.app "`pwd`"'
 alias code-disable='code --disable-extensions'
@@ -103,13 +145,12 @@ alias dnsmasqreload="dnsmasq --test && sudo brew services restart dnsmasq && flu
 alias torreload='brew services restart tor'
 alias zerotierstop='sudo launchctl unload /Library/LaunchDaemons/com.zerotier.one.plist'
 alias zerotierstart='sudo launchctl load /Library/LaunchDaemons/com.zerotier.one.plist'
-alias zreload=". ~/.zshrc "
-alias zshreload="source ~/.zshrc && echo 'ZSH config reloaded from ~/.zshrc'"
+alias zreload="exec zsh && echo 'ZSH reloaded'"
 alias tmuxreload='tmux source-file ~/.tmux.conf'
 alias gpgreload='gpg-connect-agent killagent /bye; gpg-connect-agent updatestartuptty /bye; gpg-connect-agent /bye'
 alias yubiswitch='gpg-connect-agent "scd serialno" "learn --force" /bye'
-alias yabaireload='brew services restart yabai'
-alias skhdreload='brew services restart skhd'
+alias yabaireload='yabai --restart-service'
+alias skhdreload='skhd --restart-service'
 alias livereload="browser-sync start --server --files '*.css, *.html, *.js'"
 alias livereloadproxy="browser-sync start --proxy 'myproject.dev' --files '*.css, *.html, *.php, *.js'"
 # The command alias to start the browser-sync server access the server inside my private network and test the webpage on several devices.
@@ -131,10 +172,14 @@ alias mongostatus='brew services list'
 alias mongostop='brew services stop mongodb-community'
 
 alias brewclean='brew cleanup -s && rm -rf `brew --cache`'
+alias xcodecliupgrade='sudo rm -rf /Library/Developer/CommandLineTools && sudo xcode-select --install'
 # Update, upgrade all and cleanup
 alias brewupgrade='brew update && brew upgrade && brew cu --all --yes --cleanup && mas upgrade && brew doctor; brew missing; brewclean'
 # Dump all taps, apps, casks and mac apps into ~/Brewfile
 alias brewdump='brew bundle dump --force --describe --file=~/Brewfile'
+
+alias digatekeeper='sudo spctl --master-disable'
+alias engatekeeper='sudo spctl --master-enable'
 
 alias setproxy='export http_proxy=socks5://127.0.0.1:9050'  # 'curl ifconfig.me' if it shows your proxy IP and it means that your are success
 alias unsetproxy='unset http_proxy'
@@ -145,11 +190,13 @@ alias history='fc -il 1'
 alias g='git'
 alias gs='git status '
 alias gss='git status -s'
+alias gll='git ll'
+alias gla='git la'
 alias ga='git add '
 alias gb='git branch '
 alias gc='git commit '
 alias gd='git diff'
-alias go='git checkout '
+alias ggo='git checkout '
 alias gk='gitk --all&'
 alias gx='gitx --all'
  alias lg="log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --branche"
@@ -172,5 +219,11 @@ alias mergepdf='/System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Re
 
 # Empty the Trash on all mounted volumes and the main HDD. # Also, clear Apple’s System Logs to improve shell startup speed. # Finally, clear download history from quarantine. https://mths.be/bum
 alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash; sudo rm -rfv /private/var/log/asl/*.asl; sqlite3 ~/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV* 'delete from LSQuarantineEvent'"
-#
 
+
+# recursively rename photos, videos in current dir and subdirs using Exif metadata (CreateDate)
+# https://exiftool.org/filename.html
+# https://danielhoherd.com/tech-notes/exiftool/
+# https://www.joelotz.com/blog/2022/bulk-rename-photos-to-date-taken-with-exiftool.html
+alias renameExif='exiftool -d "%Y-%m-%d__%H%M%S" "-fileName<${CreateDate;}%-c.%e" -r ./'
+alias renameTestExif='exiftool -d "%Y-%m-%d__%H%M%S" "-testName<${CreateDate;}%-c.%e" -r ./'

@@ -14,8 +14,9 @@ yabai -m config window_placement                second_child
 yabai -m config window_topmost                  off
 yabai -m config window_shadow                   off
 yabai -m config window_border                   on
-yabai -m config window_border_width             6
-yabai -m config window_border_radius            1
+yabai -m config window_border_blur              off
+yabai -m config window_border_width             1.5
+yabai -m config window_border_radius            3
 
 #yabai -m config window_opacity                  on
 #yabai -m config active_window_opacity        0.95
@@ -34,24 +35,22 @@ yabai -m config mouse_action2                   resize
 
 # general space settings
 yabai -m config layout                          bsp
-yabai -m config top_padding                     2
-yabai -m config bottom_padding                  2
-yabai -m config left_padding                    2
-yabai -m config right_padding                   2
-yabai -m config window_gap                      3
+yabai -m config top_padding                     1
+yabai -m config bottom_padding                  1
+yabai -m config left_padding                    1
+yabai -m config right_padding                   1
+yabai -m config window_gap                      1
 
 ## Space labels
-yabai -m space 1 --label "1-Dashboard"
-yabai -m space 2 --label "2-Dev"
-yabai -m space 3 --label "3-Web"
-yabai -m space 4 --label "4"
-yabai -m space 5 --label "5-Media" layout=float
+yabai -m space 1 --label "1-Dev"
+yabai -m space 2 --label "2-Web"
+yabai -m space 3 --label "3-Media" layout=float
 
 # window rules
 #yabai -m rule --add app="^.*$" manage=off
-yabai -m rule --add app!="iTerm2|Code|Safari|Chrome|PhpStorm" manage=off #grid=6:6:1:1:4:5
+yabai -m rule --add app!="Alacritty|Code|Safari|Chrome" manage=off #grid=6:6:1:1:4:5
 
-yabai -m rule --add app="^Code$" space=2-Dev
+yabai -m rule --add app="^Code$" space=1-Dev
 #yabai -m rule --add app="^Safari$" manage=on
 #yabai -m rule --add app="^.*Chrome.*$" manage=on
 #yabai -m rule --add app='^iTerm2$' manage=on
@@ -59,13 +58,12 @@ yabai -m rule --add app="^Code$" space=2-Dev
 
 yabai -m rule --add title='^.*Pref.*$' manage=off
 
-yabai -m rule --add app="^Notes$" space=5-Media manage=off #grid=1:1:0:0:1:1
-yabai -m rule --add app="^FirstSeed Calendar$" space=5-Media manage=off #grid=1:1:0:0:1:1
-yabai -m rule --add app="^Toggl Track$" space=5-Media manage=off #grid=1:1:0:0:1:1
-yabai -m rule --add app="^TeamViewer$" space=5-Media manage=off
-yabai -m rule --add app="^(Mail|Music)$" space=5-Media manage=off
-yabai -m rule --add app="^(Telegram|Slack|Messages)$" space=5-Media
-yabai -m rule --add app="^FaceTime$" space=5-Media manage=off
+yabai -m rule --add app="^Notes$" space=3-Media manage=off #grid=1:1:0:0:1:1
+yabai -m rule --add app="^FirstSeed Calendar$" space=3-Media manage=off #grid=1:1:0:0:1:1
+yabai -m rule --add app="^Toggl Track$" space=3-Media manage=off #grid=1:1:0:0:1:1
+yabai -m rule --add app="^(Mail|Music)$" space=3-Media manage=off
+yabai -m rule --add app="^(Telegram|Slack|Messages)$" space=3-Media
+yabai -m rule --add app="^FaceTime$" space=3-Media manage=off
 
 #yabai -m rule --add title='^.*Preferences.*$' manage=off
 #yabai -m rule --add title='^.*Extensions.*$' manage=off

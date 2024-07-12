@@ -29,7 +29,7 @@ set period 1
 #set previewer ~/.config/lf/scope
 set previewer ~/.config/lf/preview
 set preview true
-#set hidden
+set hidden
 set ignorecase true
 
 set incsearch
@@ -85,6 +85,9 @@ map g? $lf -doc | less
 # quit in current dir
 map Q $$SHELL
 
+# Put lf into background
+map <c-z> $ kill -STOP $PPID
+
 # Command definitions {{{
 # the prefix shows what kind of command it is
 #   $: runs as shell command
@@ -129,7 +132,7 @@ map O $mimeopen --ask $f
 cmd open-with %"$@" $fx
 map ` push :open-with<space>
 
-# Replace open command with robust selection of openers
+## Replace open command with robust selection of openers
 cmd open ${{
 	case $(file --dereference --mime-type $f -b) in
 		inode/x-empty) $EDITOR $fx ;;
@@ -142,7 +145,6 @@ cmd open ${{
 		*) for f in $fx; do $OPENER $f > /dev/null 2> /dev/null & done;;
 	esac
 }}
-
 
 cmd mkdir %[ -n "${1}" ] && mkdir -p ${@} || echo "Argument needed"
 cmd mkfile %[ -n "${1}" ] && touch ${@} || echo "Argument needed"
@@ -206,7 +208,6 @@ map fi filter
 
 # {{{ <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Archive >>>>>>>>>>>>>>>>>>>>>>>>>>>
 # extract the current file with the right command
-# (xkcd link: https://xkcd.com/1168/)
 cmd extract ${{
     set -f
     case $f in
@@ -222,7 +223,7 @@ cmd extract ${{
 }}
 
 # zip a directory/file
-cmd zip ${{
+cmd zip-custom ${{
     set -f
     mkdir $f-zip
     cp -r $fx $f-zip
@@ -230,24 +231,24 @@ cmd zip ${{
     rm -rf $f-zip/
 }}
 
-cmd tar ${{
+cmd tar-custom ${{
     set -f
     mkdir $f-tgz
     cp -r $fx $f-tgz
     (cd $f-tgz && tar cvzf $f.tar.gz .)
     rm -rf $f-tgz
 }}
-map tz zip
-map tt tar
-map tu extract
+map au extract
 
-#cmd zip %zip -r "$f" "$f"
-#cmd tar %tar cvf "$f.tar" "$f"
-#cmd targz %tar cvzf "$f.tar.gz" "$f"
-#cmd tarbz2 %tar cjvf "$f.tar.bz2" "$f"
+cmd zip %zip -r "$f" "$f"
+cmd tar %tar cvf "$f.tar" "$f"
+cmd targz %tar cvzf "$f.tar.gz" "$f"
+cmd tarbz2 %tar cjvf "$f.tar.bz2" "$f"
 # Archive Mappings
-#map ag targz
-#map ab targz
+map az zip
+map at tar
+map ag targz
+map ab tarbz2
 #map au unarchive
 # }}} >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Archive >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -325,7 +326,8 @@ map I $$PAGER "$f"
 # {{{ <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Sort <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 map sn :{{ set sortby natural; set info size; set preview; set ratios 1:2:3; }}
 map sa :{{ set sortby natural; set info size; set nopreview; set ratios 3:5; }}
-map ss :{{ set sortby size; set info size; set preview; calcdirsize; }}
+map ss :{{ set info size; set preview; calcdirsize; }}
+map sS :{{ set sortby size; set info size; set preview; calcdirsize; }}
 map st :{{ set sortby time; set info time; set preview; }}
 # }}} >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Sort >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -337,19 +339,12 @@ map oC ${{code .}}
 map gtr cd ~/.Trash/
 map gT cd ~/.local/share/Trash/files/
 
-map g/ cd /
-map gul cd /usr/local/
-map gy. cd ~/videos/youtube
-map gc cd ~/code
 map g. cd ~/.config
+map g/ cd /
+map gc cd ~/code
 map gD  cd ~/Downloads
-map gd cd ~/Documents
-map gwd cd "/Volumes/wd (wdelements-1Tb)"
+#map gd cd ~/Documents
 map gv cd /Volumes
-map gfr cd "/Volumes/Courses Frontend (s3 Wd 531Gb)"
-map gba cd "/Volumes/Courses Backend (s4 Seag 531Gb)"
-map gdi cd "/Volumes/Distr (s1 Tosh 362Gb)"
-map gme cd "/Volumes/Media (s1 Tosh 362Gb)"
 # define a custom 'rename' command without prompt for overwrite
 # cmd rename %[ -e $1 ] && printf "file exists" || mv $f $1
 # map r push :rename<space>
@@ -366,7 +361,7 @@ cmd fzf_jump ${{
   fi
   lf -remote "send $id $cmd \"$res\""
 }}
-map <c-f> :fzf_jump
+map <c-t> :fzf_jump
 
 cmd fzf_search ${{
     res="$( \
@@ -390,8 +385,8 @@ cmd fzf_z ${{
 	sel="$(zoxide query -l | fzf +s)"
 	[ -d "$sel" ] && lf -remote "send $id cd \"$sel\""
 }}
-
-# quickly cd into frecent directories using zoxide, zlua or rupa/z
+map zi :fzf_z
+# quickly cd into THE Most frecent directories using zoxide, zlua or rupa/z
 cmd z ${{
 	set +u
 	dest=''
@@ -422,7 +417,7 @@ cmd zz %{{
     lf -remote "send ${id} cd '${result}'"
 }}
 
-cmd zi ${{
+cmd zf ${{
     result="$(zoxide query -i -- "$1""
     lf -remote "send ${id} cd '${result}'"
 }}
@@ -440,34 +435,30 @@ map re ${{
 	lf -remote "send $id push :rename<space>$filename<a-b><c-b>"
 }}
 
-cmd bulkrename $vidir
-map <f-2> bulkrename
-map rb  $printf '%s\n' $fx | vidir -
-
-# rename multiple files the way nnn does it
-cmd batch_rename !{{
-    contentsfile=$(mktemp)
-    trap 'rm $contentsfile' INT TERM EXIT
-    dircontents="$(command ls -1p)"
-    printf "%s" "$dircontents" | nl -n ln > "$contentsfile";
-    $EDITOR "$contentsfile"
-    printf "%s" "$dircontents" | paste "$contentsfile" -d'\t' - \
-        | while read -r line; do
-        orig="$(printf "%s" "$line" | cut -f3 | sed 's!/$!!')"
-        new="$(printf "%s" "$line" | cut -f2 | sed 's!/$!!')"
-        if [ "$new" != "$orig" ]; then
-            if [ -e "$new" ]; then
-                printf "%s already exists, not overwriting.\n" "$new"
-            else
-                printf "./%s -> ./%s\n" "$orig" "$new"
-                command mv -i ./"$orig" ./"$new"
-            fi
+map rB bulk-rename
+cmd bulk-rename ${{
+    old="$(mktemp)"
+    new="$(mktemp)"
+    if [ -n "$fs" ]; then
+        fs="$(basename -a $fs)"
+    else
+        fs="$(ls)"
+    fi
+    printf '%s\n' "$fs" >"$old"
+    printf '%s\n' "$fs" >"$new"
+    $EDITOR "$new"
+    [ "$(wc -l < "$new")" -ne "$(wc -l < "$old")" ] && exit
+    paste "$old" "$new" | while IFS= read -r names; do
+        src="$(printf '%s' "$names" | cut -f1)"
+        dst="$(printf '%s' "$names" | cut -f2)"
+        if [ "$src" = "$dst" ] || [ -e "$dst" ]; then
+            continue
         fi
+        mv -- "$src" "$dst"
     done
-    rm "$contentsfile"
-    trap - INT TERM EXIT
+    rm -- "$old" "$new"
+    lf -remote "send $id unselect"
 }}
-map rbb batch_rename
 # }}} >>>>>>>>>>>>>>>>>>>>>>>>>> Rename >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 
@@ -517,43 +508,48 @@ map yN yank-basename-without-extension
 
 
 # {{{ =========================== PGP ===========================
-cmd pgp_encrypt_recipient %{{
+cmd gpg_encrypt_recipient %{{
     printf "Recipient: "
     read -r recipient
     case "$recipient" in
-    "") printf "Cancelled.";;
-    *) gpg --encrypt --sign --recipient "$recipient" $f;;
+      "") printf "Cancelled.";;
+      *) gpg --encrypt --sign --recipient "$recipient" $f;;
     esac
 }}
 
-cmd pgp_encrypt_pass ${{
+cmd gpg_encrypt_pass ${{
     gpg --symmetric $f;
 }}
 
-cmd pgp_decrypt ${{
+cmd gpg_decrypt ${{
     gpg --output ${f%.gpg} --decrypt $f
 }}
 
+cmd gpg_decrypt_progress ${{
+    gpg -d <(pv $f) | tar -xz
+
+}}
 # Encode input into binary or ASCII-armored output with an integrated signature
-cmd pgp_sign ${{
+cmd gpg_sign ${{
     gpg --sign $f
 }}
 
 # Wrap input in plaintext signature
-cmd pgp_sign_clear ${{
+cmd gpg_sign_clear ${{
     gpg --clearsign $f
 }}
 
 # Create binary or ASCII-armored detached signature from input
-cmd pgp_sign_detach ${{
+cmd gpg_sign_detach ${{
     gpg --detach-sign $f
 }}
-map te pgp_encrypt_recipient
-map tp pgp_encrypt_pass
-map td pgp_decrypt
-map ts. pgp_sign
-map tsc pgp_sign_clear
-map tsd pgp_sign_detach
+map ge gpg_encrypt_recipient
+map gE gpg_encrypt_pass
+map gd gpg_decrypt
+map gD gpg_decrypt_progress
+map gs. gpg_sign
+map gsc gpg_sign_clear
+map gsd gpg_sign_detach
 
 # }}} =========================== PGP ===========================
 
@@ -607,8 +603,8 @@ cmd git_branch ${{
 }}
 map gb :git_branch
 #map gp ${{clear; git pull --rebase || true; echo "press ENTER"; read ENTER}}
-map gs ${{clear; git status; echo "press ENTER"; read ENTER}}
-map gl ${{clear; git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit}}
+map gss ${{clear; git status; echo "press ENTER"; read ENTER}}
+map glog ${{clear; git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit}}
 # }}} =========================== GIT ===========================
 
 cmd on-cd &{{

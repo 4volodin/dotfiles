@@ -390,12 +390,14 @@ defaults write com.apple.finder FXInfoPanesExpanded -dict \
 
 ## Enable highlight hover effect for the grid view of a stack (Dock)
 #defaults write com.apple.dock mouse-over-hilite-stack -bool true
+#
+defaults write com.apple.dock "orientation" -string "right"
 
 ## Set the icon size of Dock items to 36 pixels
 defaults write com.apple.dock tilesize -int 36
 
 ## Change minimize/maximize window effect
-defaults write com.apple.dock mineffect -string "suck"
+defaults write com.apple.dock mineffect -string "scale"
 
 ## Minimize windows into their application’s icon
 defaults write com.apple.dock minimize-to-application -bool true
@@ -987,5 +989,9 @@ done
 networksetup -setv6off Wi-Fi
 
 brew analytics off
+
+# enable smoothing for NOT retina displays
+defaults write -g CGFontRenderingFontSmoothingDisabled -bool NO
+defaults -currentHost write -globalDomain AppleFontSmoothing -int 2
 
 echo "Done. Note that some of these changes require a logout/restart to take effect."

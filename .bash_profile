@@ -107,8 +107,7 @@ if [ -d "$HOME/.poetry/bin" ]; then
 fi
 
 if [ -d "$HOME/.cargo/bin" ]; then
-    export PATH="$HOME/.cargo/bin:$PATH"
-fi
+    fi
 
 recho() {
     echo "${RED}$1${NC}"
@@ -123,3 +122,6 @@ export -f gecho
 
 test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
 
+. "$HOME/.cargo/env"
+
+complete -C /opt/homebrew/bin/vault vault

@@ -111,7 +111,7 @@ function view_image() {
 	#truecol || \
 	#printf "\033[31m red output" || \
 	timg  -g30x30  "${FILE}" ||  \
-		chafa -c full -s "${WIDTH}x" "${FILE}" || \
+	#	chafa -c full -s "${WIDTH}x" "${FILE}" || \
 		#catimg -r 2 -w 110 -t "${FILE}" || \
 		#cam -H "$(echo "$HEIGHT*0.6/1" | bc)" "${FILE}" || \
 		#imgcat depth=256 --height "$(echo "$HEIGHT*0.9/1" | bc)" "${FILE}"

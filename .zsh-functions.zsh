@@ -1,4 +1,39 @@
+# https://github.com/sxyazi/yazi/issues/978
+function yy() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		cd "$cwd"
+	fi
+	rm -f -- "$tmp"
+}
 
+function tmux_resurrect_list_sessions() {
+  local resurrect_sessions
+  resurrect_sessions=$(tmux resurrect list)
+
+  if [[ -n $resurrect_sessions ]]; then
+    echo "Available Tmux Resurrect Sessions:"
+    echo "$resurrect_sessions"
+  else
+    echo "No Tmux Resurrect Sessions found."
+  fi
+}
+
+function sshkeysremove() {
+    ssh_keys=$(gpg-connect-agent 'keyinfo --ssh-list' /bye | awk '{print $3}');
+    for key in $ssh_keys; do gpg-connect-agent "delete_key --force $key" /bye; done
+}
+function cd() {
+    z "$@"
+}
+
+## measuring load time ZSH - https://blog.mattclemente.com/2020/06/26/oh-my-zsh-slow-to-load/
+timezsh() {
+  shell=${1-$SHELL}
+  for i in $(seq 1 10); do /usr/bin/time $shell -i -c exit; done
+}
+#
 
 colorls() {
   for i in {0..255}; do print -Pn "%K{$i}  %k%F{$i}${(l:3::0:)i}%f " ${${(M)$((i%6)):#3}:+$'\n'}; done
@@ -93,31 +128,7 @@ pk () {
    echo "'$1' is not a valid file"
    fi
 }
-# tm - create new tmux session, or switch to existing one. Works from within tmux too. (@bag-man)
-# `tm` will allow you to select your tmux session via fzf.
-# `tm irc` will attach to the irc session (if it exists), else it will create it.
 
-# ftmux - help you choose tmux sessions
-tm() {
-    if [[ ! -n $TMUX ]]; then
-        # get the IDs
-        ID="`tmux list-sessions`"
-        if [[ -z "$ID" ]]; then
-            tmux new-session
-        fi
-        create_new_session="Create New Session"
-        ID="$ID\n${create_new_session}:"
-        ID="`echo $ID | fzf | cut -d: -f1`"
-        if [[ "$ID" = "${create_new_session}" ]]; then
-            tmux new-session
-        elif [[ -n "$ID" ]]; then
-            printf '\033]777;tabbedx;set_tab_name;%s\007' "$ID"
-            tmux attach-session -t "$ID"
-        else
-            :  # Start terminal normally
-        fi
-    fi
-}
 ftmux () {
   [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
   if [ $1 ]; then
@@ -168,7 +179,7 @@ EOF
 }
 
 ## switch between light and dark themes
-function theme() {
+function theme2() {
     if [[ -n "$TMUX" ]]; then
         if [[ ! $(tmux show-environment | grep THEME) =~ 'THEME=light'  ]] ; then
             tmux set-environment THEME light

@@ -1,6 +1,18 @@
+#if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
+#    tmux attach -t default || tmux new -s default
+#fi
+
+# for HOME, END in tmux
+if [[ -n "$TMUX" ]]; then
+    bindkey "^[[H" beginning-of-line
+    bindkey "^[[1~" beginning-of-line
+    bindkey "^[[F"  end-of-line
+    bindkey "^[[4~" end-of-line
+fi
 
 # define plugins before initialize oh-my-zsh
 plugins=(
+  z
   git
   docker
   autoupdate
@@ -14,7 +26,9 @@ source $HOME/.zsh-env.zsh
 source $HOME/.zsh-aliases.zsh
 source $HOME/.zsh-common-functions.zsh
 source $HOME/.zsh-functions.zsh
+source $HOME/.general-functions.sh
 source $HOME/.zsh-gpg.zsh
+source $HOME/.zsh-starship.zsh
 source $HOME/.oh-my-zsh/oh-my-zsh.sh
 source $HOME/.asdf/asdf.sh
 source $HOME/.asdf/completions/asdf.bash
@@ -50,11 +64,6 @@ setopt hist_reduce_blanks # remove superfluous blanks from history items
 setopt inc_append_history # save history entries as soon as they are entered
 setopt share_history # share history between different instances
 setopt interactive_comments # allow comments in interactive shells
-# Опции истории команд
-setopt extended_history #Добавляет в историю время выполнения команды.
-setopt HIST_REDUCE_BLANKS ## Удалять из файл истории пустые строки
-setopt HIST_NO_STORE # команды «history» и «fc» в историю заноситься не будут
-setopt NOTIFY #Сообщать при изменении статуса фонового задания
 
 unsetopt correct_all # disable autocorrent commands
 
@@ -64,7 +73,28 @@ eval "$(zoxide init zsh)"
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 eval "$(starship init zsh)"
+# changed the z command of zoxide to cd via
 eval "$(zoxide init zsh --cmd cd)"
 
 #bindkey '\t' menu-complete
 
+#https://unix.stackexchange.com/questions/433273/changing-cursor-style-based-on-mode-in-both-zsh-and-vim
+# set shape cursor for each Enter new prompt to Pipe | '\e[3 q'
+# Set cursor style (DECSCUSR), VT520.
+# 0  ⇒  blinking block. 1  ⇒  blinking block (default). 2  ⇒  steady block. 3  ⇒  blinking underline. 4  ⇒  steady underline. 5  ⇒  blinking bar, xterm. 6  ⇒  steady bar, xterm.
+_fix_cursor() {
+   echo -ne '\e[5 q'
+}
+precmd_functions+=(_fix_cursor)
+
+# Kube autocomplete
+source <(kubectl completion zsh)
+source <(helm completion zsh)
+
+# Yandex cloud autocomplete
+if [ -f '/Users/voale/yandex-cloud/path.bash.inc' ]; then source '/Users/voale/yandex-cloud/path.bash.inc'; fi                      # The next line updates PATH for Yandex Cloud CLI.
+if [ -f '/Users/voale/yandex-cloud/completion.zsh.inc' ]; then source '/Users/voale/yandex-cloud/completion.zsh.inc'; fi            # The next line enables shell command completion for yc.
+
+# Vault Hashicorp autocomplete
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /opt/homebrew/bin/vault vault

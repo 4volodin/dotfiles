@@ -1,261 +1,275 @@
 {
-  "signature.target": "float",
-  "coc.preferences.hoverTarget": "float",
-  "suggest.floatEnable": true,
-
-  // emmet
-  "emmet.includeLanguages": {
-    "vue-html": "html",
-    "javascript": "javascriptreact"
-  },
-
-  // snippets
-  "snippets.ultisnips.directories": ["UltiSnips", "~/.config/nvim/snippets"],
-  //"snippets.userSnippetsDirectory": "~/.config/nvim/snippets",
-  // list
-  "list.indicator": ">",
-  "list.selectedSignText": " ",
-  // html
-  "html.autoClosingTags": true,
-  "html.format.endWithNewline": true,
-  "html.format.indentInnerHtml": true,
-
-  // python config
-  "python.linting.enabled": true,
-  "python.linting.pylintEnabled": true,
-  "python.formatting.provider": "black",
-
-  "yank.enableCompletion": false,
-  "languageserver": {
-    "intelephense": {
-      "command": "intelephense",
-      "args": ["--stdio"],
-      "filetypes": ["php"],
-      "initializationOptions": {
-        "storagePath": "/tmp/intelephense"
-      }
+    "yaml.schemas": {
+        "kubernetes": "/*.yml"
     },
-    "golang": {
-      "command": "gopls",
-      "rootPatterns": ["go.mod"],
-      "filetypes": ["go"]
-    }
-    //"bash": {
-    //  "command": "bash-language-server",
-    //  "args": ["start"],
-    //  "filetypes": ["sh"],
-    //  "ignoredRootPaths": []
-    //}
-  },
-  "codeLens.enable": true,
-  "suggest.echodocSupport": true,
-  "suggest.maxCompleteItemCount": 20,
-  "coc.preferences.formatOnSaveFiletypes": [
-    "javascript",
-    "typescript",
-    "typescriptreact",
-    "json",
-    "javascriptreact",
-    "typescript.tsx",
-    "css",
-    "markdown",
-    "graphql",
-    "html",
-    "yaml",
-    "json",
-    "python"
-  ],
-  "coc.preferences.formatOnType": true,
-  "eslint.autoFixOnSave": true,
-  "eslint.filetypes": [
-    "javascript",
-    "typescript",
-    "typescriptreact",
-    "json",
-    "javascriptreact",
-    "typescript.tsx"
-  ],
-  "javascript.format.insertSpaceAfterConstructor": true,
-  "javascript.format.insertSpaceBeforeFunctionParenthesis": true,
-  "diagnostic.virtualText": true,
-  "diagnostic.infoSign": "•",
-  "diagnostic.hintSign": "ஐ",
-  "diagnostic.warningSign": "⚠",
-  "diagnostic.errorSign": "✖",
-  "diagnostic.enable": true,
-  "diagnostic.signOffset": 9999999,
-  "diagnostic.highlightOffset": 9999999,
-  "diagnostic.refreshOnInsertMode": true,
-  "suggest.completionItemKindLabels": {
-    "keyword": "\uf1de",
-    "variable": "\ue79b",
-    "value": "\uf89f",
-    "operator": "\u03a8",
-    "function": "\u0192",
-    "reference": "\ufa46",
-    "constant": "\uf8fe",
-    "method": "\uf09a",
-    "struct": "\ufb44",
-    "class": "\uf0e8",
-    "interface": "\uf417",
-    "text": "\ue612",
-    "enum": "\uf435",
-    "enumMember": "\uf02b",
-    "module": "\uf40d",
-    "color": "\ue22b",
-    "property": "\ue624",
-    "field": "\uf9be",
-    "unit": "\uf475",
-    "event": "\ufacd",
-    "file": "\uf723",
-    "folder": "\uf114",
-    "snippet": "\ue60b",
-    "typeParameter": "\uf728",
-    "default": "\uf29c"
-  },
-  "python.pythonPath": "python",
 
-  // explorer
-  "explorer.width": 30,
-  //By default, coc explorer render ridiculous amount of whitespace after filename, of course I’m getting rid of that.
-  "explorer.file.child.template": "[git | 2] [selection | clip | 1] [indent][icon | 1] [diagnosticError & 1][filename omitCenter 1][modified][readonly] [linkIcon & 1][link growRight 1 omitCenter 5]",
-  "explorer.icon.enableNerdfont": true,
-  "explorer.previewAction.onHover": false,
-  "explorer.position": "right",
-  "explorer.file.showHiddenFiles": true,
-  "explorer.icon.enableVimDevicons": false,
-  "explorer.keyMappings.global": {
-    "<cr>": ["expandable?", ["expanded?", "collapse", "expand"], "open"],
-    "v": "open:vsplit",
-    "gk": false,
-    "gj": false,
-    "yp": "copyFilepath"
-  },
+    "signature.target": "float",
+    "coc.preferences.hoverTarget": "float",
+    "suggest.floatEnable": true,
 
-  // Linting PHP
-  // https://marioyepes.com/vim-setup-for-modern-web-development/
-  "intelephense.maxMemory": 2048,
-  "css.validate": false,
-  "less.validate": false,
-  "scss.validate": false,
-  "wxss.validate": false,
-  "diagnostic-languageserver.linters": {
-    "phpcs": {
-      "command": "./vendor/bin/phpcs",
-      "debounce": 3000,
-      "rootPatterns": ["composer.json", "composer.lock", "vendor", ".git"],
-      "args": [ "--report=emacs", "-s", "-"],
-      "offsetLine": 0,
-      "offsetColumn": 0,
-      "sourceName": "phpcs",
-      "formatLines": 1,
-      "formatPattern": [
-        "^.*:(\\d+):(\\d+):\\s+(.*)\\s+-\\s+(.*)(\\r|\\n)*$",
-        {
-          "line": 1,
-          "column": 2,
-          "message": 4,
-          "security": 3
+    // emmet
+    "emmet.includeLanguages": {
+        "vue-html": "html",
+        "javascript": "javascriptreact"
+    },
+
+    // snippets
+    "snippets.ultisnips.directories": ["UltiSnips", "~/.config/nvim/snippets"],
+    //"snippets.userSnippetsDirectory": "~/.config/nvim/snippets",
+    // list
+    "list.indicator": ">",
+    "list.selectedSignText": " ",
+    // html
+    "html.autoClosingTags": true,
+    "html.format.endWithNewline": true,
+    "html.format.indentInnerHtml": true,
+
+    // python config
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": true,
+    "python.formatting.provider": "black",
+
+    "yank.enableCompletion": false,
+    "languageserver": {
+        "intelephense": {
+            "command": "intelephense",
+            "args": ["--stdio"],
+            "filetypes": ["php"],
+            "initializationOptions": {
+                "storagePath": "/tmp/intelephense"
+            }
+        },
+        "golang": {
+            "command": "gopls",
+            "rootPatterns": ["go.mod"],
+            "filetypes": ["go"]
         }
-      ],
-      "securities": {
-        "error": "error",
-        "warning": "warning"
-      }
-    }
-  },
-  "diagnostic-languageserver.formatters": {
-    "phpcbf": {
-      "command": "./vendor/bin/phpcbf",
-      "args": ["-"],
-      "rootPatterns": ["composer.json", "phpcs.xml", "phpcs.xml.dist", ".git"],
-      "isStderr": false,
-      "isStdout": true
-    }
-  },
-  "diagnostic-languageserver.filetypes": {
-    "php": ["phpcs"]
-  },
-  "diagnostic-languageserver.formatFiletypes": {
-    "php": "phpcbf"
-  },
-  "intelephense.completion.maxItems": 10,
-  "intelephense.diagnostics.enable": false,
-  "intelephense.diagnostics.run": "onSave",
-  "intelephense.format.enable": false,
-  "intelephense.licenceKey": "~/.intelephense",
-  "intelephense.stubs": [
-    "apache",
-    "bcmath",
-    "bz2",
-    "calendar",
-    "com_dotnet",
-    "Core",
-    "ctype",
-    "curl",
-    "date",
-    "dba",
-    "dom",
-    "enchant",
-    "exif",
-    "FFI",
-    "fileinfo",
-    "filter",
-    "fpm",
-    "ftp",
-    "gd",
-    "gettext",
-    "gmp",
-    "hash",
-    "iconv",
-    "imap",
-    "intl",
-    "json",
-    "ldap",
-    "libxml",
-    "mbstring",
-    "meta",
-    "mysqli",
-    "oci8",
-    "odbc",
-    "openssl",
-    "pcntl",
-    "pcre",
-    "PDO",
-    "pdo_ibm",
-    "pdo_mysql",
-    "pdo_pgsql",
-    "pdo_sqlite",
-    "pgsql",
-    "Phar",
-    "posix",
-    "pspell",
-    "readline",
-    "Reflection",
-    "session",
-    "shmop",
-    "SimpleXML",
-    "snmp",
-    "soap",
-    "sockets",
-    "sodium",
-    "SPL",
-    "sqlite3",
-    "standard",
-    "superglobals",
-    "sysvmsg",
-    "sysvsem",
-    "sysvshm",
-    "tidy",
-    "tokenizer",
-    "xml",
-    "xmlreader",
-    "xmlrpc",
-    "xmlwriter",
-    "xsl",
-    "Zend OPcache",
-    "zip",
-    "zlib",
-    "wordpress"
-  ]
+        //"bash": {
+        //  "command": "bash-language-server",
+        //  "args": ["start"],
+        //  "filetypes": ["sh"],
+        //  "ignoredRootPaths": []
+        //}
+    },
+    "codeLens.enable": true,
+    "suggest.echodocSupport": true,
+    "suggest.maxCompleteItemCount": 20,
+    "coc.preferences.formatOnSaveFiletypes": [
+        "javascript",
+        "typescript",
+        "typescriptreact",
+        "json",
+        "javascriptreact",
+        "typescript.tsx",
+        "css",
+        "markdown",
+        "graphql",
+        "html",
+        "yaml",
+        "json",
+        "python"
+    ],
+    "coc.preferences.formatOnType": true,
+    "eslint.autoFixOnSave": true,
+    "eslint.filetypes": [
+        "javascript",
+        "typescript",
+        "typescriptreact",
+        "json",
+        "javascriptreact",
+        "typescript.tsx"
+    ],
+    "javascript.format.insertSpaceAfterConstructor": true,
+    "javascript.format.insertSpaceBeforeFunctionParenthesis": true,
+    "diagnostic.virtualText": true,
+    "diagnostic.infoSign": "•",
+    "diagnostic.hintSign": "ஐ",
+    "diagnostic.warningSign": "⚠",
+    "diagnostic.errorSign": "✖",
+    "diagnostic.enable": true,
+    "diagnostic.signOffset": 9999999,
+    "diagnostic.highlightOffset": 9999999,
+    "diagnostic.refreshOnInsertMode": true,
+    "suggest.completionItemKindLabels": {
+        "keyword": "\uf1de",
+        "variable": "\ue79b",
+        "value": "\uf89f",
+        "operator": "\u03a8",
+        "function": "\u0192",
+        "reference": "\ufa46",
+        "constant": "\uf8fe",
+        "method": "\uf09a",
+        "struct": "\ufb44",
+        "class": "\uf0e8",
+        "interface": "\uf417",
+        "text": "\ue612",
+        "enum": "\uf435",
+        "enumMember": "\uf02b",
+        "module": "\uf40d",
+        "color": "\ue22b",
+        "property": "\ue624",
+        "field": "\uf9be",
+        "unit": "\uf475",
+        "event": "\ufacd",
+        "file": "\uf723",
+        "folder": "\uf114",
+        "snippet": "\ue60b",
+        "typeParameter": "\uf728",
+        "default": "\uf29c"
+    },
+    "python.pythonPath": "python",
+
+    // explorer
+    "explorer.width": 30,
+    //By default, coc explorer render ridiculous amount of whitespace after filename, of course I’m getting rid of that.
+    "explorer.file.child.template": "[git | 2] [selection | clip | 1] [indent][icon | 1] [diagnosticError & 1][filename omitCenter 1][modified][readonly] [linkIcon & 1][link growRight 1 omitCenter 5]",
+    "explorer.icon.enableNerdfont": true,
+    "explorer.previewAction.onHover": false,
+    "explorer.position": "right",
+    "explorer.file.showHiddenFiles": true,
+    "explorer.icon.enableVimDevicons": false,
+    "explorer.keyMappings.global": {
+        "<cr>": ["expandable?", ["expanded?", "collapse", "expand"], "open"],
+        "v": "open:vsplit",
+        "gk": false,
+        "gj": false,
+        "yp": "copyFilepath"
+    },
+
+    // Linting PHP
+    // https://marioyepes.com/vim-setup-for-modern-web-development/
+    "intelephense.maxMemory": 2048,
+    "css.validate": false,
+    "less.validate": false,
+    "scss.validate": false,
+    "wxss.validate": false,
+    "diagnostic-languageserver.linters": {
+        "phpcs": {
+            "command": "./vendor/bin/phpcs",
+            "debounce": 3000,
+            "rootPatterns": [
+                "composer.json",
+                "composer.lock",
+                "vendor",
+                ".git"
+            ],
+            "args": ["--report=emacs", "-s", "-"],
+            "offsetLine": 0,
+            "offsetColumn": 0,
+            "sourceName": "phpcs",
+            "formatLines": 1,
+            "formatPattern": [
+                "^.*:(\\d+):(\\d+):\\s+(.*)\\s+-\\s+(.*)(\\r|\\n)*$",
+                {
+                    "line": 1,
+                    "column": 2,
+                    "message": 4,
+                    "security": 3
+                }
+            ],
+            "securities": {
+                "error": "error",
+                "warning": "warning"
+            }
+        }
+    },
+    "diagnostic-languageserver.formatters": {
+        "phpcbf": {
+            "command": "./vendor/bin/phpcbf",
+            "args": ["-"],
+            "rootPatterns": [
+                "composer.json",
+                "phpcs.xml",
+                "phpcs.xml.dist",
+                ".git"
+            ],
+            "isStderr": false,
+            "isStdout": true
+        }
+    },
+    "diagnostic-languageserver.filetypes": {
+        "php": ["phpcs"]
+    },
+    "diagnostic-languageserver.formatFiletypes": {
+        "php": "phpcbf"
+    },
+    "intelephense.completion.maxItems": 10,
+    "intelephense.diagnostics.enable": false,
+    "intelephense.diagnostics.run": "onSave",
+    "intelephense.format.enable": false,
+    "intelephense.licenceKey": "~/.intelephense",
+    "intelephense.stubs": [
+        "apache",
+        "bcmath",
+        "bz2",
+        "calendar",
+        "com_dotnet",
+        "Core",
+        "ctype",
+        "curl",
+        "date",
+        "dba",
+        "dom",
+        "enchant",
+        "exif",
+        "FFI",
+        "fileinfo",
+        "filter",
+        "fpm",
+        "ftp",
+        "gd",
+        "gettext",
+        "gmp",
+        "hash",
+        "iconv",
+        "imap",
+        "intl",
+        "json",
+        "ldap",
+        "libxml",
+        "mbstring",
+        "meta",
+        "mysqli",
+        "oci8",
+        "odbc",
+        "openssl",
+        "pcntl",
+        "pcre",
+        "PDO",
+        "pdo_ibm",
+        "pdo_mysql",
+        "pdo_pgsql",
+        "pdo_sqlite",
+        "pgsql",
+        "Phar",
+        "posix",
+        "pspell",
+        "readline",
+        "Reflection",
+        "session",
+        "shmop",
+        "SimpleXML",
+        "snmp",
+        "soap",
+        "sockets",
+        "sodium",
+        "SPL",
+        "sqlite3",
+        "standard",
+        "superglobals",
+        "sysvmsg",
+        "sysvsem",
+        "sysvshm",
+        "tidy",
+        "tokenizer",
+        "xml",
+        "xmlreader",
+        "xmlrpc",
+        "xmlwriter",
+        "xsl",
+        "Zend OPcache",
+        "zip",
+        "zlib",
+        "wordpress"
+    ]
 }

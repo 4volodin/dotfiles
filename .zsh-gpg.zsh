@@ -15,7 +15,7 @@ export GPG_TTY SSH_AUTH_SOCK
 
 # Check  GPG agent and SSH_AUTH_SOCK
 #$ echo $SSH_AUTH_SOCK
-#$ ls -la $SSH_AUTH_SOCK
+#$ ls -lah $SSH_AUTH_SOCK
 #$ gpgconf --list-dirs agent-ssh-socket
 #$ launchctl list | grep gpg-agent
 
@@ -47,6 +47,7 @@ function gssh {
         echo $socket
 EOF
 )
+
     if [ ! $? -eq 0 ]; then
         echo "Problem with remote GPG. use ssh -A $@ for ssh with agent forwarding only." >&2
         return

@@ -1,87 +1,153 @@
-set surround
-set multiple-cursors
-set commentary
-"set easymotion
-set highlightedyank
-set NERDTree
+"source ~/.vimrc
 
-# use Idea to join lines smartly
-set ideajoin
+""" Plugins ---------------------------------------------
+Plug 'easymotion/vim-easymotion'          "Requires IdeaVim-EasyMotion. Lots of mappings
+Plug 'terryma/vim-multiple-cursors'       "See below for remapped keys. <A-n> doesn't work on Mac
+Plug 'machakann/vim-highlightedyank'      "set highlightedyank
+Plug 'preservim/nerdtree'                 "set NERDTree
+Plug 'tpope/vim-commentary'               "set commentary [count]gc{motion}, o_gc, v_gc, gcc
+Plug 'tpope/vim-surround'                 "set surround ys, cs, ds, S
+Plug 'michaeljsmith/vim-indent-object'
 
-set ideamarks
-" dia daa cia caa
-set argtextobj
-" die dae cie cae
-set textobj-entire
+Plug 'vim-scripts/argtextobj.vim'         " argument text objects: aa, ia; daa - delete argument
+Plug 'kana/vim-textobj-entire'            " vae, dae, cae - visual,del,change ae -all text object
 
-set relativenumber
-set number
+" Common settings
+set number relativenumber
 set showmode
 set smartcase
 set history=1000
-set scrolloff=3         " 3 lines above/below cursor when scrolling
+set scrolloff=3                           " 3 lines above/below cursor when scrolling
 set incsearch
 set hlsearch
 set ignorecase smartcase
-
-" Misc
-nmap <leader>R :source ~/.ideavimrc<CR>
-
-" Integrate with system clipboard
-set clipboard=unnamedplus,unnamed
-
 set visualbell
-set noerrorbells
+set clipboard+=unnamed
+set clipboard+=ideaput
+
+" IDEA specific settings
+set ideajoin                              " use Idea to join lines smartly
+set ideamarks                             "Sync IJ bookmarks and Vim marks
+set idearefactormode=keep                 "don't change the mode during refactoring
+
 let mapleader = " "
 
-imap ,. <Esc>
-vmap ,. <Esc>
+nnoremap <c-w>R :action IdeaVim.ReloadVimRc.reload<CR>
 
-imap <M-S> <Esc><M-S>
+inoremap jj <Esc>
 
-" These create newlines like o and O but stay in normal mode
-nmap zj o<Esc>k
-nmap zk O<Esc>j
-
+" Movement cursor
 nmap j gj
 nmap k gk
 
-nnoremap Y y$
-map vv V
+"" Using Command + S  to save
+nnoremap <M-s> :w<CR>
+inoremap <M-s> <C-O>:w<CR><Esc>
 
-" indent without kill the selection in vmode
+" Act like D and C
+nnoremap Y y$
+nnoremap V v$
+
+" VisualSelection string
+nnoremap vv V
+
+" After block yank and paste, move cursor to the end of operated text and don't override register
+vnoremap y y`]
+vnoremap p "_dP`]
+nnoremap p p`]
+
+" Yank and paste from clipboard
+nnoremap ,y "+y
+vnoremap ,y "+y
+nnoremap ,yy "+yy
+nnoremap ,p "+p
+
+" Don't yank to default register when changing something
+nnoremap c "xc
+xnoremap c "xc
+
+" Make the dot command work as expected in visual mode (via
+" https://www.reddit.com/r/vim/comments/3y2mgt/do_you_have_any_minor_customizationsmappings_that/cya0x04)
+vnoremap . :norm.<CR>
+
+" Center screen when jumping to next match
+nnoremap n nzz
+nnoremap N Nzz
+vnoremap n nzz
+vnoremap N Nzz
+
+"" Turn off recording
+map q <Nop>
+
+" move line(s) up/down
+nnoremap <A-j> :m .+1<CR>==
+nnoremap <A-k> :m .-2<CR>==
+inoremap <A-j> <Esc>:m .+1<CR>==gi
+inoremap <A-k> <Esc>:m .-2<CR>==gi
+vnoremap <A-j> :action MoveLineDown<CR>
+vnoremap <A-k> :action MoveLineUp<CR>
+
+" Indent without kill the selection in vmode
 nmap < <<
 nmap > >>
 vmap < <gv
 vmap > >gv
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
+nnoremap <TAB> :action PreviousTab<CR>
+nnoremap <s-TAB> :action NextTab<CR>
 
-"" Formating
+let g:argtextobj_pairs="[:],(:),<:>"
+
+" easy find
+map <leader>e <Plug>(easymotion-f)
+map <leader>E <Plug>(easymotion-s)
+
+" Formating
 nmap <leader>F :action ReformatCode<CR>
 vmap <leader>F :action ReformatCode<CR>
-" Use Q for formatting the current paragraph (or visual selection)
-vmap Q gq
-nmap Q gqap
 
-" Jumping
-"Map ctrl-movement keys to window switching
+" Jumping - Map ctrl-movement keys to window switching
 map <C-h> <C-w>h
 map <c-j> <c-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
-" built-in navigation to navigated items works better
-nnoremap <c-o> :action Back<cr>
-nnoremap <c-i> :action Forward<cr>
-"" better switching for Tabs
-nnoremap <c-s-tab> gT
-nnoremap <c-tab> gt
-inoremap <c-s-tab> :tabp
-inoremap <c-tab> :tabn
+
+" for tabs create and switching
+nnoremap tn :tabnew<Space>
+nnoremap tl :tabnext<CR>
+nnoremap th :tabprev<CR>
+"nnoremap <c-s-tab> gT
+"nnoremap <c-tab> gt
+"inoremap <c-s-tab> :tabp
+"inoremap <c-tab> :tabn
+
+" Search Find Replace
+nnoremap / /
+nnoremap ,/ :%s///<left><left>
+nnoremap g/ :action FindInPath<cr>
+nnoremap <silent> <leader>/ :nohlsearch<CR>
+
+" ---------------------------------------------------------------------
+" IDEA Actions {{{
+" ---------------------------------------------------------------------
+" folding
+map zf <Action>(CollapseSelection)
+
+map <C-g> <action>(ActivateTerminalToolWindow)
+nnoremap <leader>t :action Terminal.OpenInTerminal<CR>
 "" JumpToChange
 map g; <Action>(JumpToLastChange)
 map g, <Action>(JumpToNextChange)
 
+" Keys from coc.nvim
+nmap ]g :action GotoNextError<cr>
+nmap [g :action GotoPreviousError<cr>
+
+" Keys from vim-gitgutter
+nmap ]c <Action>(VcsShowNextChangeMarker)
+nmap [c <Action>(VcsShowPrevChangeMarker)
+nmap =c <Action>(VcsShowCurrentChangeMarker)        " Not from vim-gitgutter. ={motion} is for indenting. =c does nothing
 
 " Moving statements
 nmap [s :action MoveStatementUp<cr>
@@ -89,85 +155,49 @@ nmap ]s :action MoveStatementDown<cr>
 " unimpaired mappings
 nnoremap [m :action MethodUp<cr>
 nnoremap ]m :action MethodDown<cr>
-nmap ]e :action GotoNextError<cr>
-nmap [e :action GotoPreviousError<cr>
-nnoremap ]h :action VcsShowNextChangeMarker<cr>
-nnoremap [h :action VcsShowPrevChangeMarker<cr>
 
 "" Splits manipulation
-nmap <leader>ws :action SplitHorizontally<cr>
-nmap <leader>wv :action SplitVertically<cr>
-nmap <leader>wc :action Unsplit<cr>
-nmap <leader>wC :action UnsplitAll<cr>
-nmap <leader>wd :action OpenEditorInOppositeTabGroup<cr>
-nmap <leader><leader> :action VimFilePrevious<cr>
-"" nmap <leader>ww :action JumpToLastWindow<cr>
+nmap <C-s>s :action SplitHorizontally<cr>
+nmap <C-s>v :action SplitVertically<cr>
 
-nnoremap tn :tabnew<Space>
-nnoremap tk :tabnext<CR>
-nnoremap tj :tabprev<CR>
-
-nnoremap <A-j> :m .+1<CR>==
-nnoremap <A-k> :m .-2<CR>==
-inoremap <A-j> <Esc>:m .+1<CR>==gi
-inoremap <A-k> <Esc>:m .-2<CR>==gi
-vnoremap <A-j> :action MoveLineDown<CR>
-vnoremap <A-k> :action MoveLineUp<CR>
-" IdeaVim uses 'a' for alt instead of Vim's 'm'
-"nmap <a-j> 15gj
-"nmap <a-k> 15gk
-
-map <leader>A :action $SelectAll<CR>
-map <leader>X :action $Cut<CR>
 " Pasting from yank history
 nnoremap <leader>P :action PasteMultiple<CR>
-
-nmap <leader>ee :action KJumpAction<cr>
-nmap <leader>ew :action KJumpAction.Word0<cr>
-nmap <leader>e0 :action KJumpAction.Word1<cr>
-nmap <leader>el :action KJumpAction.Line<cr>
 
 " options
 nnoremap cow :action EditorToggleUseSoftWraps<cr>
 nnoremap col :action EditorToggleShowWhitespaces<cr>
 
-
 " for Multiple Cursors
 nnoremap <A-l> :action EditorCloneCaretBelow<cr>
 nnoremap <A-h> :action EditorCloneCaretAbove<cr>
-nnoremap <A-p> :action EditorAddOrRemoveCaret<cr>
+nnoremap <A-c> :action EditorAddOrRemoveCaret<cr>
 " Remap multiple-cursors shortcuts to match terryma/vim-multiple-cursors
 nmap <C-n> <Plug>NextWholeOccurrence
 xmap <C-n> <Plug>NextWholeOccurrence
 nmap g<C-n> <Plug>NextOccurrence
 xmap g<C-n> <Plug>NextOccurrence
-nmap <C-x> <Plug>SkipOccurrence
 xmap <C-x> <Plug>SkipOccurrence
-nmap <C-p> <Plug>RemoveOccurrence
 xmap <C-p> <Plug>RemoveOccurrence
+
 " Note that the default <A-n> and g<A-n> shortcuts don't work on Mac due to dead keys.
 " <A-n> is used to enter accented text e.g. ñ
-nmap <S-C-n> <Plug>AllWholeOccurrences
-xmap <S-C-n> <Plug>AllWholeOccurrences
-nmap g<S-C-n> <Plug>AllOccurrences
-xmap g<S-C-n> <Plug>AllOccurrences
-
+nmap <leader><C-n> <Plug>AllWholeOccurrences
+xmap <leader><C-n> <Plug>AllWholeOccurrences
+nmap <leader>g<C-n> <Plug>AllOccurrences
+xmap <leader>g<C-n> <Plug>AllOccurrences
 
 " Comment and UnComment the same shortcuts
-nnoremap <leader>cc :action CommentByLineComment<CR>
-vmap <leader>cc :action CommentByLineComment<CR>
-vmap <leader>cb :action CommentByBlockComment<CR>
+" nnoremap gc :action CommentByLineComment<CR>
+" vmap gc :action CommentByLineComment<CR>
+vmap gC :action CommentByBlockComment<CR>
 
 "" NERDTree
 nnoremap ,, :action ActivateProjectToolWindow<CR>
-"map <leader>, :NERDTreeToggle<CR>
 nmap <C-\> :NERDTreeFind<CR>
-"map <leader>n :NERDTreeFocus<CR>
 
-" code Refactoring
 " Refactorings
 nnoremap <leader>rr :action Refactorings.QuickListPopupAction<CR>
-nnoremap <leader>rn :action RenameElement<CR>
+nnoremap <leader>re :action RenameElement<CR>
 nnoremap <leader>rf :action RenameFile<CR>
 nnoremap <leader>ri :action Inline<CR>
 nnoremap <leader>rm :action ExtractMethod<CR>
@@ -175,7 +205,7 @@ nnoremap <leader>iv :action IntroduceVariable<CR>
 nnoremap <leader>ip :action IntroduceParameter<CR>
 
 vmap <leader>rr :action Refactorings.QuickListPopupAction<CR>
-vmap <leader>rn :action RenameElement<CR>
+vmap <leader>re :action RenameElement<CR>
 vmap <leader>rf :action RenameFile<CR>
 vmap <leader>ri :action Inline<CR>
 vmap <leader>rm :action ExtractMethod<CR>
@@ -190,27 +220,6 @@ nmap <leader>ic :action InspectCode<cr>
 
 nmap <leader>G :action Generate<cr>
 
-" Search Find Replace
-nnoremap <leader>fg :action FindInPath<CR>
-nnoremap <leader>fr :action ReplaceInPath<CR>
-vmap <leader>fg :action FindInPath<CR>
-vmap <leader>fr :action ReplaceInPath<CR>
-"=== Search shorcuts === "
-map <leader>h :%s///<left><left>
-nmap <leader>/ :action Find<cr>
-nmap <leader>\ :action FindInPath<cr>
-nnoremap g/ /
-
-
-"https://gist.github.com/dewaka/ef947e52767bf453eaf77c852051eb7e
-nmap <leader>fc :action GotoClass<cr>
-nmap <leader>ff :action GotoFile<cr>
-nmap <leader>fs :action GotoSymbol<cr>
-nmap <leader>fa :action GotoAction<CR>
-nmap <leader>fd :action GotoDeclaration<cr>
-nmap <leader>fi :action GotoImplementation<cr>
-nmap <leader>T :action GotoTest<cr>
-
 nnoremap K :action JS.TypeInfo<CR>
 vmap K :action JS.TypeInfo<CR>
 nmap <leader>ip :action ParameterInfo<CR>
@@ -223,7 +232,7 @@ nmap <leader>I :action SelectIn<cr>
 nmap <leader>B :action ShowBookmarks<cr>
 nmap <leader>L :action RecentLocations<cr>
 nmap <leader>N :action RecentFiles<cr>
-nmap <leader>E :action ShowErrorDescription<cr>
+"nmap <leader>E :action ShowErrorDescription<cr>
 
 " Undo
 nmap <leader>H :action LocalHistory.ShowHistory<CR>
@@ -234,13 +243,22 @@ nmap <leader>;s :action FileStructurePopup<cr>
 nmap <leader>;e :action EditorPopupMenu<cr>
 
 " Git operations
-nmap <leader>gg :action Git.ContextMenu<cr>
-nmap <leader>gs :action Vcs.Show.Local.Changes<cr>
+nmap ,gm :action Git.ContextMenu<cr>
+nmap ,gl :action Vcs.Show.Log<cr>
+nmap ,gd :action Compare.LastVersion<cr>
+nmap ,gs :action Vcs.Show.Local.Changes<cr>
 "nmap <leader>yp :action Vcs.QuickListPopupAction<cr>
-nmap <leader>ga :action Annotate<cr>
-nmap <leader>gl :action Vcs.Show.Log<cr>
-nmap <leader>gd :action Compare.LastVersion<cr>
-nmap <leader>gr :action Git.ResolveConflicts<cr>
+nmap ,ga :action Annotate<cr>
+nmap ,gr :action Git.ResolveConflicts<cr>
+
+"https://gist.github.com/dewaka/ef947e52767bf453eaf77c852051eb7e
+nmap <leader>gc :action GotoClass<cr>
+nmap <leader>gf :action GotoFile<cr>
+nmap <leader>gs :action GotoSymbol<cr>
+nmap <leader>ga :action GotoAction<CR>
+nmap <leader>gd :action GotoDeclaration<cr>
+nmap <leader>gi :action GotoImplementation<cr>
+nmap <leader>T :action GotoTest<cr>
 
 " Building, Running and Debugging
 nmap <leader>bb :action ToggleLineBreakpoint<cr>
@@ -253,4 +271,4 @@ nnoremap ,dd :action Debug<cr>
 nnoremap ,dc :action DebugClass<cr>
 nnoremap ,t :action RerunTests<cr>
 nnoremap ,T :action RerunFailedTests<cr>
-
+" }}} IDEA Actions
