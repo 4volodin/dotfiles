@@ -1,0 +1,10 @@
+[user]
+	name = Aleks Truedev
+    email = 4truedev@gmail.com
+    signingkey = ~/.ssh/id_ed25519-4truedev.pub
+#use SSH for signing
+[gpg]
+    format = ssh
+[core]
+    sshCommand = "ssh -i ~/.ssh/id_ed25519-4truedev"
+

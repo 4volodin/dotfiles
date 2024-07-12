@@ -1,0 +1,6 @@
+[user]
+	name = Aleks Volodin
+    email = 4volodin@gmail.com
+    signingkey = 15F244E555B07B02
+[core]
+    sshCommand = "ssh -i ~/.ssh/id_rsa-4volodin-yubi.pub"

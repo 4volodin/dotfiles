@@ -1,0 +1,64 @@
+#!/bin/zsh
+
+set -x
+
+mode="light"
+
+if [ -z "$1" ]; then
+  defaults read -g AppleInterfaceStyle >/dev/null
+  if [ $? -eq 0 ]; then
+    mode="dark"
+  fi
+else
+    case "$1" in
+      light)
+          $(osascript -l JavaScript -e "Application('System Events').appearancePreferences.darkMode = false")
+        mode="light"
+        ;;
+      dark)
+          $(osascript -l JavaScript -e "Application('System Events').appearancePreferences.darkMode = true")
+        mode="dark"
+        ;;
+    esac
+fi
+
+#change vim
+#tmux_s_name="$(tmux display-message -p '#S')"       #  current session name
+tmux_listsessions=($(/opt/homebrew/bin/tmux list-sessions | cut -d : -f 1))
+tmux_wins=$(/opt/homebrew/bin/tmux list-windows -t "$tmux_s_name")
+#for wix in $(/opt/homebrew/bin/tmux list-windows -t main -F 'main:#{window_index}'); do
+#    for pix in $(/opt/homebrew/bin/tmux list-panes -F 'main:#{window_index}.#{pane_index}' -t "$wix"); do
+for  tmux_s_name in $tmux_listsessions ; do
+    for wix in $(/opt/homebrew/bin/tmux list-windows -t "$tmux_s_name" -F "$tmux_s_name"':#{window_index}'); do
+        for pix in $(/opt/homebrew/bin/tmux list-panes -F "$tmux_s_name"':#{window_index}.#{pane_index}' -t "$wix"); do
+          is_vim="ps -o state= -o comm= -t '#{pane_tty}' | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
+          /opt/homebrew/bin/tmux if-shell -t "$pix" "$is_vim" "send-keys -t $pix escape ENTER"
+          /opt/homebrew/bin/tmux if-shell -t "$pix" "$is_vim" "send-keys -t $pix ':call ChangeBackground()' ENTER"
+      done
+    done
+done
+
+alacritty_config=~/.config/alacritty/alacritty.yml
+
+#change alacritty
+case "$mode" in
+    dark)
+      /opt/homebrew/bin/tmux source-file ~/.tmux/themes/github_light.conf
+
+      sed -i -e 's/github_light/github_dark/' ${alacritty_config}
+
+      # change VSCode theme
+      sed -i -e 's/"workbench.colorTheme": ".*"/"workbench.colorTheme": "Default Dark Modern"/g' "$HOME/Library/Application Support/Code/User/settings.json"
+
+      ;;
+    light)
+      /opt/homebrew/bin/tmux source-file ~/.tmux/themes/github_dark.conf
+
+      sed -i -e 's/github_dark/github_light/' ${alacritty_config}
+
+      # change VSCode theme
+      sed -i -e 's/"workbench.colorTheme": ".*"/"workbench.colorTheme": "Default Light Modern"/g' "$HOME/Library/Application Support/Code/User/settings.json"
+
+      ;;
+esac
+
