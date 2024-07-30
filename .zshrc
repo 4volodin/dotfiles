@@ -69,6 +69,8 @@ unsetopt correct_all # disable autocorrent commands
 
 eval "$(zoxide init zsh)"
 
+eval "$(direnv hook zsh)"
+
 # Now this command will run each time you start a new shell instance. It creates a series of environment variables, including HOMEBREW_CELLAR="/opt/homebrew/Cellar" and HOMEBREW_REPOSITORY="/opt/homebrew" and several others.
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
@@ -87,10 +89,6 @@ _fix_cursor() {
 }
 precmd_functions+=(_fix_cursor)
 
-# Kube autocomplete
-source <(kubectl completion zsh)
-source <(helm completion zsh)
-
 # Yandex cloud autocomplete
 if [ -f '/Users/voale/yandex-cloud/path.bash.inc' ]; then source '/Users/voale/yandex-cloud/path.bash.inc'; fi                      # The next line updates PATH for Yandex Cloud CLI.
 if [ -f '/Users/voale/yandex-cloud/completion.zsh.inc' ]; then source '/Users/voale/yandex-cloud/completion.zsh.inc'; fi            # The next line enables shell command completion for yc.
@@ -98,3 +96,8 @@ if [ -f '/Users/voale/yandex-cloud/completion.zsh.inc' ]; then source '/Users/vo
 # Vault Hashicorp autocomplete
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /opt/homebrew/bin/vault vault
+
+# Kube autocomplete
+source <(kubectl completion zsh)
+source <(helm completion zsh)
+
