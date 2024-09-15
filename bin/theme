@@ -48,7 +48,7 @@ case "$mode" in
       sed -i -e 's/github_light/github_dark/' ${alacritty_config}
 
       # change VSCode theme
-      sed -i -e 's/"workbench.colorTheme": ".*"/"workbench.colorTheme": "Default Dark Modern"/g' "$HOME/Library/Application Support/Code/User/settings.json"
+      sed -i -e 's/"workbench.colorTheme": ".*"/"workbench.colorTheme": "One Dark Pro"/g' "$HOME/Library/Application Support/Code/User/settings.json"
 
       ;;
     light)
