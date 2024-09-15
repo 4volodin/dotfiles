@@ -608,18 +608,24 @@ map glog ${{clear; git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d
 # }}} =========================== GIT ===========================
 
 cmd on-cd &{{
-    printf "\033]0; $(pwd | sed "s|$HOME|~|") - lf\007" > /dev/tty
-    # display git repository status in your prompt
-    #source /usr/share/git/completion/git-prompt.sh
+	# display repository status in your prompt
     source ~/.oh-my-zsh/plugins/gitfast/git-prompt.sh
     GIT_PS1_SHOWDIRTYSTATE=auto
     GIT_PS1_SHOWSTASHSTATE=auto
     GIT_PS1_SHOWUNTRACKEDFILES=auto
     GIT_PS1_SHOWUPSTREAM=auto
     GIT_PS1_COMPRESSSPARSESTATE=auto
-    git=$(__git_ps1 " [GIT BRANCH:> %s]") || true
-    fmt="\033[32;1m%u@%h\033[0m:\033[34;1m%w\033[0m\033[33;1m$git\033[0m"
-    lf -remote "send $id set promptfmt \"$fmt\""
+    git=$(__git_ps1) || true
+
+	if [ -d .git ] || [ -f .git ]; then
+		branch=$(git branch --show-current 2>/dev/null) || true
+		remote=$(git config --get branch.$branch.remote 2>/dev/null) || true
+		url=$(git remote get-url $remote 2>/dev/null) || true
+		fmt="\033[32;1m%u@%h\033[0m:\033[34;1m%w\033[0m\033[33;1m [$git][GIT BRANCH:> $branch >> $url]\033[0m"
+	else
+		fmt="\033[32;1m%u@%h\033[0m:\033[34;1m%d\033[0m\033[1m%f\033[0m"
+	fi
+	lf -remote "send $id set promptfmt \"$fmt\""
 }}
 # also run at startup
 on-cd
