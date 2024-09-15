@@ -18,15 +18,12 @@ alias java-intel="export JAVA_HOME=`/usr/libexec/java_home --arch x86_64`; java 
 alias rand='LC_ALL=C tr -dc "[:alnum:]" < /dev/urandom | head -c 20 | pbcopy'
 alias pass='openssl rand -base64 32 | pbcopy'
 
-# terraform
 alias tf='terraform'
-
-# vault
-alias va='vault'
 
 # k8s
 alias k='kubectl'
 alias kga='kubectl get all'
+alias kaf='kubectl apply -f '
 
 # Получить текущий контекст
 alias kgc='kubectl config current-context'
