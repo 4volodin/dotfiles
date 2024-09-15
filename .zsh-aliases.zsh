@@ -184,6 +184,9 @@ alias engatekeeper='sudo spctl --master-enable'
 alias setproxy='export http_proxy=socks5://127.0.0.1:9050'  # 'curl ifconfig.me' if it shows your proxy IP and it means that your are success
 alias unsetproxy='unset http_proxy'
 
+# in Firefox set only the SOCKS host, port (HTTP Proxy must be disabled)
+alias redirect='ssh -D 127.0.0.1:9050 -N voale@traefik'
+
 alias history='fc -il 1'
 
 #alias git='LC_ALL=en_US git'
