@@ -244,19 +244,19 @@ EOF
 lua << EOF
 local lspconfig = require('lspconfig')
 lspconfig.pyright.setup {}
-lspconfig.yamlls.setup{
-    settings = {
-        yaml = {
-          schemas = {
-            kubernetes = {
-              "cronjob.y*ml",
-              "deployment.y*ml",
-              "service.y*ml",
-            }
-          },
-        },
-    },
-}
+-- lspconfig.yamlls.setup{
+--     settings = {
+--         yaml = {
+--           schemas = {
+--             kubernetes = {
+--               "cronjob.y*ml",
+--               "deployment.y*ml",
+--               "service.y*ml",
+--             }
+--           },
+--         },
+--     },
+-- }
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
 local on_attach = function(client, bufnr)
