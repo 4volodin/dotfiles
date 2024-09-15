@@ -254,7 +254,7 @@ defaults write NSGlobalDomain AppleMetricUnits -bool false
 #defaults write com.apple.screensaver askForPasswordDelay -int 0
 
 ## Save screenshots to the desktop
-mkdir ~/Documents/Screenshots
+mkdir ~/Documents/Screenshots && ln -s ~/Documents/Screenshots ~/Desktop/ScreenShots
 defaults write com.apple.screencapture location ~/Documents/Screenshots
 killall SystemUIServer
 
@@ -391,7 +391,7 @@ defaults write com.apple.finder FXInfoPanesExpanded -dict \
 ## Enable highlight hover effect for the grid view of a stack (Dock)
 #defaults write com.apple.dock mouse-over-hilite-stack -bool true
 #
-defaults write com.apple.dock "orientation" -string "right"
+defaults write com.apple.dock "orientation" -string "left"
 
 ## Set the icon size of Dock items to 36 pixels
 defaults write com.apple.dock tilesize -int 36
