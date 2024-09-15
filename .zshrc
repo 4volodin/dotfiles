@@ -90,12 +90,13 @@ _fix_cursor() {
 precmd_functions+=(_fix_cursor)
 
 # Yandex cloud autocomplete
-if [ -f '/Users/voale/yandex-cloud/path.bash.inc' ]; then source '/Users/voale/yandex-cloud/path.bash.inc'; fi                      # The next line updates PATH for Yandex Cloud CLI.
-if [ -f '/Users/voale/yandex-cloud/completion.zsh.inc' ]; then source '/Users/voale/yandex-cloud/completion.zsh.inc'; fi            # The next line enables shell command completion for yc.
+if [ -f "${HOME}/yandex-cloud/path.bash.inc" ]; then source "${HOME}/yandex-cloud/path.bash.inc"; fi                      # The next line updates PATH for Yandex Cloud CLI.
+if [ -f "${HOME}/yandex-cloud/completion.zsh.inc" ]; then source "${HOME}/yandex-cloud/completion.zsh.inc"; fi            # The next line enables shell command completion for yc.
 
 # Vault Hashicorp autocomplete
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /opt/homebrew/bin/vault vault
+complete -o nospace -C /opt/homebrew/bin/terraform terraform
 
 # Kube autocomplete
 source <(kubectl completion zsh)

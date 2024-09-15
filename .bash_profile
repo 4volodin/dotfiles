@@ -125,3 +125,5 @@ test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shel
 . "$HOME/.cargo/env"
 
 complete -C /opt/homebrew/bin/vault vault
+
+complete -C /opt/homebrew/bin/terraform terraform
